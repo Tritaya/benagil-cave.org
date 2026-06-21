@@ -2,3 +2,6 @@
 _*.py
 _*.txt
 *.bak
+
+# Local Netlify folder
+.netlify
