@@ -1,0 +1,4 @@
+# build tooling — kept on disk for reproducibility, not deployed
+_*.py
+_*.txt
+*.bak
