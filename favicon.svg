@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="6" fill="#0e6e74"/>
+  <!-- the oculus: gold ring + sky-lit centre (Benagil's roof skylight) -->
+  <circle cx="16" cy="14" r="8" fill="none" stroke="#b9831c" stroke-width="2.4"/>
+  <circle cx="16" cy="14" r="4.6" fill="#f7eccd"/>
+  <!-- water line below -->
+  <path d="M5 25 q5.5 -3 11 0 t11 0" fill="none" stroke="#7fd4cf" stroke-width="2" stroke-linecap="round"/>
+</svg>
