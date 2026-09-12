@@ -1,0 +1,128 @@
+{
+ "benagil-cave": {
+  "alt": "Benagil Cave from above: the round skylight in the clifftop, turquoise water and the hidden beach below, and tour boats waiting outside the western arch",
+  "caption": "The eye of Benagil from the clifftop. Every visit now happens from the water: boats at the western arch, guided kayaks at the eastern one.",
+  "kind": "hero",
+  "w": 1200,
+  "h": 630
+ },
+ "benagil-cave-tour-operators": {
+  "alt": "Tour boats and kayaks lined up on Benagil beach in the early morning before the first departures",
+  "caption": "Benagil beach before the first departures. The kayak and SUP operators launch from here; most boats leave from the towns either side.",
+  "kind": "hero",
+  "w": 1200,
+  "h": 630
+ },
+ "is-benagil-cave-worth-it": {
+  "alt": "The view from a tour boat paused at the western arch of Benagil Cave: empty beach inside, skylight above, other boats waiting outside",
+  "caption": "What a boat visit is now: two minutes at the arch, an empty beach nobody may land on, and the next boat waiting.",
+  "kind": "hero",
+  "w": 1200,
+  "h": 630
+ },
+ "benagil-cave-tour-from-carvoeiro": {
+  "alt": "Carvoeiro's beach cove with white houses on the cliffs and small Benagil tour boats loading at the water's edge",
+  "caption": "Carvoeiro: the boats load straight off the town beach, and the cave is a quarter of an hour east.",
+  "kind": "hero",
+  "w": 1200,
+  "h": 630
+ },
+ "benagil-cave-tour-from-armacao-de-pera": {
+  "alt": "A painted fishing boat and a tour RIB on the sand at Armacao de Pera, the closest big beach to Benagil",
+  "caption": "Armação de Pêra: launches off the beach beside the fishing boats, the closest big-town start to the cave.",
+  "kind": "hero",
+  "w": 1200,
+  "h": 630
+ },
+ "benagil-cave-tour-from-portimao": {
+  "alt": "Speedboats loading passengers at Portimao marina with the Praia da Rocha cliffs beyond",
+  "caption": "Portimão marina: the RIB fleet with the biggest review counts on the coast leaves from these pontoons.",
+  "kind": "hero",
+  "w": 1200,
+  "h": 630
+ },
+ "benagil-cave-tour-from-albufeira": {
+  "alt": "A tour catamaran ready to leave Albufeira marina, with the marina's pastel buildings behind",
+  "caption": "Albufeira marina: the catamaran and dolphin combos start here, an hour's cruise west of the cave.",
+  "kind": "hero",
+  "w": 1200,
+  "h": 630
+ },
+ "benagil-cave-tour-from-lagos": {
+  "alt": "A tour boat among the sea stacks of Ponta da Piedade near Lagos on the way to Benagil",
+  "caption": "Lagos trips pass Ponta da Piedade first; the cave is the far turnaround, 45 to 60 minutes out.",
+  "kind": "hero",
+  "w": 1200,
+  "h": 630
+ },
+ "benagil-cave-access-rules": {
+  "alt": "Diagram of the Benagil Cave access rules: boats two minutes by the western arch, guided kayaks eight minutes by the eastern entrance, no landing, no swimming",
+  "caption": "The 2024 rules in one picture: boats by the western arch for two minutes, guided paddlers by the eastern entrance for eight, nobody on the sand.",
+  "kind": "info",
+  "w": 1200,
+  "h": 675
+ },
+ "benagil-cave-sea-conditions": {
+  "alt": "Gauge of the swell thresholds for Benagil Cave: calm under 0.5 metres, choppy to 1.5 metres, closed above 1.5 metres",
+  "caption": "The one number that decides the day. The live reading at the top of this page uses the same three bands.",
+  "kind": "info",
+  "w": 1200,
+  "h": 675
+ },
+ "benagil-boat-tour-comparison": {
+  "alt": "Comparison chart of the four ways to visit Benagil Cave: speedboat, small boat, catamaran and guided kayak, by duration, price, and minutes inside",
+  "caption": "Four ways in. Every motorised boat gets the same two minutes; only a guided paddle gets eight.",
+  "kind": "info",
+  "w": 1200,
+  "h": 675
+ },
+ "benagil-cave-kayak-route": {
+  "alt": "Route diagram of a guided kayak visit to Benagil Cave: launch from Benagil beach, paddle 150 to 200 metres, enter by the eastern entrance for up to eight minutes",
+  "caption": "The paddle itself is short. The eight minutes inside are the whole point.",
+  "kind": "info",
+  "w": 1200,
+  "h": 675
+ },
+ "benagil-cave-departure-towns-map": {
+  "alt": "Schematic map of the Algarve coast showing one-way sea times to Benagil Cave from Lagos, Portimao, Carvoeiro, Armacao de Pera and Albufeira",
+  "caption": "One-way sea times, approximate. The closest launches spend the most of your trip at the cave.",
+  "kind": "info",
+  "w": 1200,
+  "h": 675
+ },
+ "benagil-cave-light-window": {
+  "alt": "Cross-section of Benagil Cave showing when sunlight falls through the skylight: soft early light, a direct beam from 10:00 to 13:00, and soft late-afternoon light",
+  "caption": "The beam is a light-viewing window, not a legal one. The access rules cap craft and minutes, not the clock.",
+  "kind": "info",
+  "w": 1200,
+  "h": 675
+ },
+ "benagil-cave-worth-it-verdict": {
+  "alt": "Chart of what a Benagil visit gets you now: two minutes by boat, eight minutes by guided kayak, and the old beach landing and swim-in banned since August 2024",
+  "caption": "Set the expectation before you book: it is a from-the-water visit, and the paddle is the long one.",
+  "kind": "info",
+  "w": 1200,
+  "h": 675
+ },
+ "benagil-cave-kayak-vs-sup": {
+  "alt": "Comparison of kayak and stand-up paddleboard tours into Benagil Cave: stability, viewpoint, sea conditions and starting prices",
+  "caption": "Same entrance, same eight minutes. The board buys the viewpoint; the kayak buys the stability.",
+  "kind": "info",
+  "w": 1200,
+  "h": 675
+ },
+ "benagil-boat-tour": {
+  "alt": "A small speedboat pausing at the western mouth of Benagil cave, with the round skylight and turquoise water inside",
+  "caption": "The western arch: the only way in for a motorised boat, and a two-minute visit whatever you arrive on.",
+  "kind": "hero",
+  "w": 1200,
+  "h": 630
+ },
+ "benagil-cave-kayak-tour": {
+  "alt": "Tandem kayaks with a guide entering Benagil cave through the eastern arch under the skylight beam",
+  "caption": "The eastern entrance, single file, one guide per six craft: eight minutes under the eye.",
+  "kind": "hero",
+  "w": 1200,
+  "h": 630
+ }
+}

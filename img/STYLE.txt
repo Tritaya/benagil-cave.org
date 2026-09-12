@@ -1,1 +1,3 @@
 Style: documentary travel photograph, golden Miocene limestone and clear turquoise water, late-morning Algarve light with a soft beam through the cave's round skylight, people small and distant, no text, no logos, no watermarks, 16:9.
+
+Infographic style: flat editorial infographic on a pale warm cream background, deep teal (#0e6e74) and ochre gold (#b9831c) with sandstone accents, thin dark line work, clean humanist sans-serif lettering, generous margins with all text kept well inside the frame, wide 16:9 landscape, no photo, no gradients, no logos, no watermark. Spell every label exactly as written. Delivered 1200x675, never cropped; attribution pill "benagil-cave.org" stamped bottom-right by the pipeline, not the generator.

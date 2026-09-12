@@ -60,7 +60,19 @@ HERO_OVERRIDES = {
     # The boat page's own verdict is "if the cave is the point, leave from Carvoeiro or Armacao";
     # its calendar must not then sell a $116 Portimao cruise (t197581, the raw value winner).
     "benagil-boat-tour": 421964,
+    # the three hub pages argue for the Carvoeiro small boat in their copy; a new near launch with a
+    # higher basket must not swap the calendar under that copy (t732531 did, 2026-09-13)
+    "index": 421964,
+    "operators": 421964,
+    "benagil-cave-worth-it": 421964,
+    # the kayak page is written around the max-6 5.0/547 paddle; t732531 (a kayak tour whose title
+    # omits the word) out-baskets it by $5 and must not take the calendar
+    "benagil-cave-kayak": 670049,
 }
+# site-hosted hero (img/<file>.webp, stamped "benagil-cave.org") is the og:image when it exists;
+# the GYG 148 image of the pinned tour is the fallback
+SITE_HERO = {"index": "benagil-cave.webp", "operators": "benagil-cave-tour-operators.webp", "benagil-cave-worth-it": "is-benagil-cave-worth-it.webp",
+             "benagil-boat-tour": "benagil-boat-tour.webp", "benagil-cave-kayak": "benagil-cave-kayak-tour.webp"}
 
 
 def f(t, k):
@@ -117,8 +129,13 @@ def craft(t):
     title = f(t, "title")
     if KAYAK.search(title):
         return "kayak"
-    if CAT.search(title + " " + f(t, "abstract")):
+    if CAT.search(title) or re.search(r"catamaran", f(t, "description")[:400], re.I):   # "sail along the coast" in a small boat's blurb is not a catamaran
         return "cat"
+    # a title can omit the craft: t732531 "Benagil: Caves & Wild Beaches Tour w/ Local Guide, 4K Photos"
+    # is a paddle ("Paddle to secluded secret sea caves") and shipped as a small boat and a page hero
+    body = f(t, "highlights") + " " + f(t, "description")[:600] + " " + f(t, "includes")
+    if len(KAYAK.findall(body)) > len(re.findall(r"\bboat|\brib\b|speedboat|vessel|skipper", body, re.I)):
+        return "kayak"
     return "boat"
 
 
@@ -131,7 +148,7 @@ def title_prefix_town(t):
     m = re.match(r"^\s*(?:from\s+)?([^:]{3,40}):", f(t, "title"), re.I)
     if not m:
         return None
-    pre = m.group(1)
+    pre = m.group(1) + ":"   # keep the colon: the "benagil" pattern is anchored on "benagil:" so it never fires on "Benagil Caves tour" body text
     for k, p in TOWNS.items():
         if p.search(pre):
             return k
@@ -146,6 +163,17 @@ def towns(t):
         return [pre]
     # pickup / meeting text next; itinerary only its pickup/start entries
     pk = " ".join(f(t, k) for k in ("meetingPoint", "meetingPointAddress", "meetingPoints"))
+    # the meeting fields are often empty while the abstract opens with "Meet at the Portimão pier"
+    # (t396968, 13,888 reviews, shipped with no town - audit 2026-09-13): read only meet/depart clauses
+    ab = re.sub(r"<[^>]+>", " ", f(t, "description") or f(t, "abstract"))[:500]   # the v10 JSON keeps the text in "description"; "abstract" is None
+    clause_town = None
+    for m in re.finditer(r"(?:meet|depart|leav|start|begin|board)[^.]{0,80}", ab, re.I):
+        # the FIRST town named after the verb is the departure; later names in the same sentence are
+        # destinations ("leaving Albufeira marina towards Benagil and Carvoeiro")
+        hits = [(p.search(m.group(0)).start(), k) for k, p in TOWNS.items() if p.search(m.group(0))]
+        if hits:
+            clause_town = min(hits)[1]
+            break
     it = t.get("itinerary") or []
     if isinstance(it, list):
         for step in it:
@@ -154,6 +182,8 @@ def towns(t):
     if FAR_ORIGIN.search(pk) and not any(p.search(pk) for p in TOWNS.values()):
         return []
     tw = [k for k, p in TOWNS.items() if p.search(pk)]
+    if not tw and clause_town:
+        tw = [clause_town]
     if not tw:
         loc = f(t, "location").lower()
         if FAR_ORIGIN.search(loc):
@@ -222,7 +252,8 @@ def og_image(t):
 def badge(t):
     for b in t.get("badges") or []:
         b = str(b)
-        if b.startswith("#1 selling") or b in ("Top rated", "Top pick", "Likely to sell out", "Certified by GetYourGuide", "Official ticket"):
+        # GetYourGuide's own "Top pick" badge reads as OUR pick next to a pinned calendar; dropped (audit 2026-09-13)
+        if b.startswith("#1 selling") or b in ("Top rated", "Likely to sell out", "Certified by GetYourGuide", "Official ticket"):
             return b
     return t.get("bookedRecentlyText") or ""
 
@@ -236,9 +267,9 @@ def card(t, rank):
     meta.append('<span class="ec-reach ec-reach-%s">%s</span>' % (c, {"kayak": "Kayak / SUP", "cat": "Catamaran", "boat": "Boat"}[c]))
     if is_private(t):
         meta.append('<span class="ec-reach ec-reach-cat">Private, priced per boat</span>')
-    b = badge(t)
-    if not b and reviews(t) >= 2000:
-        b = "Most booked"
+    # 2,000+ reviews is the more useful chip than any platform badge ("Certified by GetYourGuide"
+    # was hiding "Most booked" on the 13,888-review RIB)
+    b = "Most booked" if reviews(t) >= 2000 else badge(t)
     if b:
         meta.append('<span class="ec-hot">%s</span>' % e(b))
     if t.get("freeCancellation"):
@@ -270,8 +301,10 @@ def is_sup(t):
 def is_private(t):
     """The title alone is not enough: t195731 is titled 'Benagil Cave & Marinha Beach Boat Tour'
     and its GYG slug is 'algarve-coast-private-boat-tour' at $447 per hull (audit, 2026-09-12)."""
-    hay = " ".join((f(t, "title"), f(t, "url"), f(t, "abstract")))
-    return bool(re.search(r"\bprivate\b|\bprivado\b|per boat|per group|whole boat|exclusive use", hay, re.I))
+    hay = " ".join((f(t, "title"), f(t, "url"), f(t, "description")[:600]))
+    # ... and the word alone is not enough either: t390616's slug says "private-guided-boat-tour"
+    # at $37 with 434 reviews, which is a per-person seat (audit, 2026-09-13). A hull costs hundreds.
+    return bool(re.search(r"\bprivate\b|\bprivado\b|per boat|per group|whole boat|exclusive use", hay, re.I)) and price_num(t) >= 150
 
 
 def ranked(pool, sel, min_reviews):
@@ -287,10 +320,19 @@ def cards_html(pool, ids, exclude=None, limit=CARDS_PER_SLOT):
     doctrine asks for): a $14 RIB with 13,888 reviews must not vanish behind six $50 seats."""
     ids = [i for i in ids if i != exclude]
     shown = ids[:limit]
+    # ... and so does the CHEAPEST per-person seat, so a "from $23" in the prose always has a card
+    # behind it (the kayak page said $23 over a list whose cheapest card was $34 - audit 2026-09-13)
+    musts = []
     if ids:
-        top = max(ids, key=lambda i: reviews(pool[i]))
-        if top not in shown and len(shown) >= 1:
-            shown = shown[:-1] + [top] if len(shown) >= limit else shown + [top]
+        musts.append(max(ids, key=lambda i: reviews(pool[i])))
+        pp = [i for i in ids if not is_private(pool[i])]
+        if pp:
+            musts.append(min(pp, key=lambda i: price_num(pool[i])))
+    for m in musts:
+        if m not in shown:
+            if len(shown) >= limit:
+                shown.remove([i for i in shown if i not in musts][-1])
+            shown.append(m)
     return '<ol class="ec-tours">\n' + "\n".join(card(pool[i], n + 1) for n, i in enumerate(shown)) + "\n    </ol>", shown
 
 
@@ -331,8 +373,11 @@ def hero_lead(pool, tid):
 def main():
     pool = {i: t for i, t in load().items() if base_true(t)}
     is_kayak = lambda t: craft(t) == "kayak"
+    is_speed = lambda t: craft(t) == "boat" and (SPEED.search(f(t, "title") + " " + f(t, "includes") + " " + f(t, "description")[:300]) is not None)
     near = lambda t: craft(t) != "kayak" and any(x in towns(t) for x in ("carvoeiro", "armacao", "benagil"))
-    catd = lambda t: craft(t) != "kayak" and (craft(t) == "cat" or DOLPH.search(f(t, "title")) or any(x in towns(t) for x in ("portimao", "albufeira", "lagos", "vilamoura")))
+    # catamarans and dolphin combos by what they ARE, not by where they leave from: the old town rule
+    # filed the Portimão speedboat t397931 under "catamarans" (audit 2026-09-13)
+    catd = lambda t: craft(t) != "kayak" and not is_speed(t) and (craft(t) == "cat" or DOLPH.search(f(t, "title")) is not None)
     town_sel = lambda tw: (lambda t: tw in towns(t))   # any craft that departs there
 
     def town_slot(tw, fallback):
@@ -346,7 +391,6 @@ def main():
     near_ids = ranked(pool, near, CARD_MIN_REVIEWS)
     catd_ids = ranked(pool, catd, CARD_MIN_REVIEWS)
     # mode slots for the two spoke pages (/benagil-boat-tour, /benagil-cave-kayak)
-    is_speed = lambda t: craft(t) == "boat" and (SPEED.search(f(t, "title") + " " + f(t, "includes") + " " + f(t, "description")[:300]) is not None)
     is_kayak_only = lambda t: craft(t) == "kayak" and not is_sup(t)
     SLOTS = {
         "boat-near": near_ids,
@@ -397,7 +441,8 @@ def main():
            "disclaimer": DISCLAIMER, "widget_auto": widget_auto()}
     for slug, tid in HEROES.items():
         t = pool[tid]
-        out["og"][slug] = og_image(t)
+        site_file = SITE_HERO.get(slug, slug + ".webp")
+        out["og"][slug] = ("https://benagil-cave.org/img/" + site_file) if os.path.exists(os.path.join(HERE, "..", "img", site_file)) else og_image(t)
         out["hero_meta"][slug] = {"id": tid, "title": clean_title(t), "price": price(t), "rating": rating(t), "reviews": reviews(t),
                                   "aff": aff_url(t), "widget": widget_availability(tid), "lead": hero_lead(pool, tid)}
     TOWN_OF_SLUG = {"benagil-cave-tour-from-carvoeiro": "carvoeiro", "benagil-cave-tour-from-armacao-de-pera": "armacao",

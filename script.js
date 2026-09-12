@@ -246,7 +246,8 @@ if (weatherEl || pill) {
       pill.querySelector('.pill-dot').className = 'pill-dot ' + vCls;
       pill.querySelector('.pill-wind').textContent = waveH.toFixed(1) + ' m';
       const pc = pill.querySelector('.pill-cta');
-      if (pc) pc.textContent = waveH < 1.5 ? '· Book a boat →' : '· Sea conditions →';
+      // the ask names what the page's pinned calendar sells (boat by default; kayak on the paddle page)
+      if (pc) pc.textContent = waveH < 1.5 ? '· ' + (pill.dataset.cta || 'Book a boat') + ' →' : '· Sea conditions →';
       pillTarget = waveH < 1.5 ? 'availability' : 'safety';
       pill.style.display = 'flex';
     }
