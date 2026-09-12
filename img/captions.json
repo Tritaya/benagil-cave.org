@@ -43,7 +43,7 @@
  },
  "benagil-cave-tour-from-albufeira": {
   "alt": "A tour catamaran ready to leave Albufeira marina, with the marina's pastel buildings behind",
-  "caption": "Albufeira marina: the catamaran and dolphin combos start here, an hour's cruise west of the cave.",
+  "caption": "Albufeira marina: the catamaran and dolphin combos start here, an hour's cruise east of the cave.",
   "kind": "hero",
   "w": 1200,
   "h": 630
@@ -124,5 +124,12 @@
   "kind": "hero",
   "w": 1200,
   "h": 630
+ },
+ "benagil-boat-tour-comparison-towns": {
+  "alt": "Comparison chart of the four ways to visit Benagil Cave: speedboat, small boat, catamaran and guided kayak, by duration, where they leave from, and minutes inside",
+  "caption": "Four ways in. Every motorised boat gets the same two minutes; only a guided paddle gets eight. Live prices are on the cards below.",
+  "kind": "info",
+  "w": 1200,
+  "h": 675
  }
 }

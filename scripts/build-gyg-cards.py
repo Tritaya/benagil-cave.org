@@ -346,7 +346,7 @@ def widget_auto():
     return '<div data-gyg-widget="auto" data-gyg-partner-id="%s" data-gyg-cmp="%s-a" data-gyg-locale-code="en-US" data-gyg-currency="USD"></div>' % (PARTNER, CMP)
 
 
-DISCLAIMER = ('<p class="t-note ec-note">Prices are GetYourGuide "from" prices in US dollars, per person unless the card says "priced per boat" (private boats are listed after the per-person tours), ratings and review counts as captured 12 September 2026; '
+DISCLAIMER = ('<p class="t-note ec-note">Prices are GetYourGuide "from" prices in US dollars, per person unless the card says "priced per boat", ratings and review counts as captured 12 September 2026; '
               'they move with season and availability &#8212; the live widget and the booking page are the reference. Sea permitting: swell over about 1.5 m closes the cave. '
               'Booking through these links may earn us a commission at no extra cost to you; it never changes the order or the verdicts.</p>')
 
@@ -396,6 +396,9 @@ def main():
         "boat-near": near_ids,
         "kayak": ranked(pool, is_kayak, CARD_MIN_REVIEWS),
         "cat-dolphin": catd_ids,
+        # the home/operators group is headed "Catamarans, speedboats & dolphins": catamarans, dolphin
+        # combos AND the speedboats, so the $14 RIB has a card wherever a chart says "from $14"
+        "cat-speed": ranked(pool, lambda t: catd(t) or is_speed(t), CARD_MIN_REVIEWS),
         "speedboat": ranked(pool, is_speed, CARD_MIN_REVIEWS),
         "boat-any": ranked(pool, lambda t: craft(t) == "boat", CARD_MIN_REVIEWS),
         "catamaran": ranked(pool, lambda t: craft(t) == "cat", CARD_MIN_REVIEWS),
@@ -466,7 +469,7 @@ def main():
     inject(idx, "home-og", og_meta("index"), inline=True)
     inject(idx, "home-boat", cards_html(pool, SLOTS["boat-near"], exclude=HEROES["index"], limit=5)[0])
     inject(idx, "home-kayak", cards_html(pool, SLOTS["kayak"], limit=3)[0])
-    inject(idx, "home-cat", cards_html(pool, SLOTS["cat-dolphin"], exclude=HEROES["index"], limit=4)[0])
+    inject(idx, "home-cat", cards_html(pool, SLOTS["cat-speed"], exclude=HEROES["index"], limit=4)[0])
     inject(idx, "home-availability", widget_availability(HEROES["index"]))
     inject(idx, "home-availability-lead", out["hero_meta"]["index"]["lead"], inline=True)
     inject(idx, "home-auto", widget_auto())
@@ -476,7 +479,7 @@ def main():
     inject(ops, "ops-og", og_meta("operators"), inline=True)
     inject(ops, "ops-near", cards_html(pool, SLOTS["boat-near"], exclude=HEROES["operators"])[0])
     inject(ops, "ops-kayak", cards_html(pool, SLOTS["kayak"])[0])
-    inject(ops, "ops-cat", cards_html(pool, SLOTS["cat-dolphin"], exclude=HEROES["operators"])[0])
+    inject(ops, "ops-cat", cards_html(pool, SLOTS["cat-speed"], exclude=HEROES["operators"])[0])
     inject(ops, "ops-availability", widget_availability(HEROES["operators"]))
     inject(ops, "ops-availability-lead", out["hero_meta"]["operators"]["lead"], inline=True)
     inject(ops, "ops-auto", widget_auto())
