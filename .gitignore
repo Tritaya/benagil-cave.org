@@ -5,3 +5,6 @@ _*.txt
 
 # Local Netlify folder
 .netlify
+
+# raw ChatGPT generations (delivered webp lives in img/)
+img/raw/

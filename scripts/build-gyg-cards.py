@@ -56,7 +56,11 @@ OPLINKS = {
     "algarve-cave-tours": r"algarve cave tours|geoff meadows",
 }
 
-HERO_OVERRIDES = {}  # slug -> tour id, only for a deliberate editorial pick
+HERO_OVERRIDES = {
+    # The boat page's own verdict is "if the cave is the point, leave from Carvoeiro or Armacao";
+    # its calendar must not then sell a $116 Portimao cruise (t197581, the raw value winner).
+    "benagil-boat-tour": 421964,
+}
 
 
 def f(t, k):
@@ -233,6 +237,8 @@ def card(t, rank):
     if is_private(t):
         meta.append('<span class="ec-reach ec-reach-cat">Private, priced per boat</span>')
     b = badge(t)
+    if not b and reviews(t) >= 2000:
+        b = "Most booked"
     if b:
         meta.append('<span class="ec-hot">%s</span>' % e(b))
     if t.get("freeCancellation"):
@@ -253,6 +259,14 @@ def card(t, rank):
     ) % (b64(aff_url(t)), e(clean_title(t)), rank, e(thumb(t)), e(clean_title(t)), e(what(t)), "\n              ".join(meta))
 
 
+SUP = re.compile(r"\bsup\b|paddle ?board|stand[- ]up", re.I)
+SPEED = re.compile(r"speed ?boat|\brib\b|fast boat|semi-rigid|zodiac", re.I)
+
+
+def is_sup(t):
+    return bool(SUP.search(f(t, "title")))
+
+
 def is_private(t):
     """The title alone is not enough: t195731 is titled 'Benagil Cave & Marinha Beach Boat Tour'
     and its GYG slug is 'algarve-coast-private-boat-tour' at $447 per hull (audit, 2026-09-12)."""
@@ -269,8 +283,15 @@ def ranked(pool, sel, min_reviews):
 
 
 def cards_html(pool, ids, exclude=None, limit=CARDS_PER_SLOT):
-    ids = [i for i in ids if i != exclude][:limit]
-    return '<ol class="ec-tours">\n' + "\n".join(card(pool[i], n + 1) for n, i in enumerate(ids)) + "\n    </ol>", ids
+    """Value order, but the slot's MOST-BOOKED product always gets a card (the honest budget pick the
+    doctrine asks for): a $14 RIB with 13,888 reviews must not vanish behind six $50 seats."""
+    ids = [i for i in ids if i != exclude]
+    shown = ids[:limit]
+    if ids:
+        top = max(ids, key=lambda i: reviews(pool[i]))
+        if top not in shown and len(shown) >= 1:
+            shown = shown[:-1] + [top] if len(shown) >= limit else shown + [top]
+    return '<ol class="ec-tours">\n' + "\n".join(card(pool[i], n + 1) for n, i in enumerate(shown)) + "\n    </ol>", shown
 
 
 def widget_availability(tid):
@@ -324,10 +345,18 @@ def main():
 
     near_ids = ranked(pool, near, CARD_MIN_REVIEWS)
     catd_ids = ranked(pool, catd, CARD_MIN_REVIEWS)
+    # mode slots for the two spoke pages (/benagil-boat-tour, /benagil-cave-kayak)
+    is_speed = lambda t: craft(t) == "boat" and (SPEED.search(f(t, "title") + " " + f(t, "includes") + " " + f(t, "description")[:300]) is not None)
+    is_kayak_only = lambda t: craft(t) == "kayak" and not is_sup(t)
     SLOTS = {
         "boat-near": near_ids,
         "kayak": ranked(pool, is_kayak, CARD_MIN_REVIEWS),
         "cat-dolphin": catd_ids,
+        "speedboat": ranked(pool, is_speed, CARD_MIN_REVIEWS),
+        "boat-any": ranked(pool, lambda t: craft(t) == "boat", CARD_MIN_REVIEWS),
+        "catamaran": ranked(pool, lambda t: craft(t) == "cat", CARD_MIN_REVIEWS),
+        "kayak-only": ranked(pool, is_kayak_only, CARD_MIN_REVIEWS),
+        "sup": ranked(pool, lambda t: craft(t) == "kayak" and is_sup(t), 5),
         "benagil-cave-tour-from-carvoeiro": town_slot("carvoeiro", near_ids),
         "benagil-cave-tour-from-armacao-de-pera": town_slot("armacao", near_ids),
         "benagil-cave-tour-from-portimao": town_slot("portimao", catd_ids),
@@ -359,6 +388,10 @@ def main():
     for slug in ("benagil-cave-tour-from-carvoeiro", "benagil-cave-tour-from-armacao-de-pera", "benagil-cave-tour-from-portimao",
                  "benagil-cave-tour-from-albufeira", "benagil-cave-tour-from-lagos"):
         HEROES[slug] = pick_hero(slug, SLOTS[slug])
+    # spoke pages: the boat page's calendar is the best per-person boat (any town); the kayak
+    # page's calendar is a KAYAK (never a SUP - that is its own mode on the same page)
+    HEROES["benagil-boat-tour"] = pick_hero("benagil-boat-tour", SLOTS["boat-any"])
+    HEROES["benagil-cave-kayak"] = pick_hero("benagil-cave-kayak", SLOTS["kayak-only"])
 
     out = {"partner": PARTNER, "cmp": CMP, "stamp": "12 September 2026", "heroes": HEROES, "slots": {}, "og": {}, "hero_meta": {},
            "disclaimer": DISCLAIMER, "widget_auto": widget_auto()}

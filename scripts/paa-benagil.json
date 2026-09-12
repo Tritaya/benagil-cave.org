@@ -1,0 +1,884 @@
+{
+  "cost": 0.030400000000000003,
+  "n_unique": 41,
+  "seeds": [
+    "benagil boat tour",
+    "benagil cave boat tour",
+    "benagil cave speedboat",
+    "benagil cave kayak",
+    "benagil kayak tour",
+    "can you go inside benagil cave",
+    "benagil cave sup",
+    "how to visit benagil cave"
+  ],
+  "by_seed": {
+    "benagil boat tour": [
+      {
+        "question": "What is the best boat tour for Benagil caves?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Is Benagil Cave Tour worth it?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Is there a boat trip to Benagil caves in Albufeira?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Do you need a tour for Benagil Cave?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the best way to see the Benagil Cave?",
+        "seed": "Do you need a tour for Benagil Cave?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What to wear to Benagil caves?",
+        "seed": "Do you need a tour for Benagil Cave?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the best time of day to visit Benagil caves?",
+        "seed": "What to wear to Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "How far is it from Lagos to the Benagil caves?",
+        "seed": "What to wear to Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Can you walk down to Benagil Cave?",
+        "seed": "What to wear to Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      }
+    ],
+    "benagil cave boat tour": [
+      {
+        "question": "What is the best boat tour for Benagil caves?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Is Benagil Cave Tour worth it?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Is there a boat trip to Benagil caves in Albufeira?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Can I book a private boat tour of Benagil caves?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the best way to see the Benagil caves?",
+        "seed": "Can I book a private boat tour of Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the best tour to take in the Algarve?",
+        "seed": "Can I book a private boat tour of Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the prettiest town on the Algarve coast?",
+        "seed": "What is the best tour to take in the Algarve?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What should you not miss in Portugal?",
+        "seed": "What is the best tour to take in the Algarve?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Is Faro or Albufeira better?",
+        "seed": "What is the best tour to take in the Algarve?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      }
+    ],
+    "benagil cave speedboat": [
+      {
+        "question": "What is the best way to see the Benagil caves?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Are the Benagil caves worth it?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Can I take a private boat tour to Benagil caves?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "How can I reach the Benagil sea cave?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Can you go to Benagil Cave without a tour?",
+        "seed": "How can I reach the Benagil sea cave?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the best tour option for Benagil caves?",
+        "seed": "How can I reach the Benagil sea cave?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the best time of day to see Benagil caves?",
+        "seed": "What is the best tour option for Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Is there a boat trip to Benagil caves in Albufeira?",
+        "seed": "What is the best tour option for Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What to wear to Benagil caves?",
+        "seed": "What is the best tour option for Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      }
+    ],
+    "benagil cave kayak": [
+      {
+        "question": "Can kayaks go into Benagil Cave?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Can I take a kayak tour of the Benagil caves in Lagos?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Can I go cave kayaking in Portugal?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Can you swim in Benagil Cave?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Is it safe to swim in the ocean in Portugal?",
+        "seed": "Can you swim in Benagil Cave?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Is there a boat ride to Benagil caves?",
+        "seed": "Can you swim in Benagil Cave?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Is Benagil Cave Tour worth it?",
+        "seed": "Is there a boat ride to Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the best time to visit Benagil caves?",
+        "seed": "Is there a boat ride to Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the best tour option for Benagil caves?",
+        "seed": "Is there a boat ride to Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Is Benagil Cave Tour worth it?",
+        "seed": "What is the best tour option for Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the best time of day to see Benagil caves?",
+        "seed": "What is the best tour option for Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the best tour option for Benagil caves?",
+        "seed": "What is the best time of day to see Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What to wear to Benagil caves?",
+        "seed": "What is the best time of day to see Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the best time of day to see Benagil caves?",
+        "seed": "What to wear to Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "How far is it from Lagos to the Benagil caves?",
+        "seed": "What to wear to Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Are the Benagil caves worth it?",
+        "seed": "How far is it from Lagos to the Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Which is nicer, Lagos or Albufeira?",
+        "seed": "How far is it from Lagos to the Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      }
+    ],
+    "benagil kayak tour": [
+      {
+        "question": "What is the best kayak tour for Benagil Cave?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Can kayaks go into Benagil Cave?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Is Benagil Cave Tour worth it?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Can I go on a kayak tour of Benagil caves from Lagos?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Can you swim in Benagil Cave?",
+        "seed": "Can I go on a kayak tour of Benagil caves from Lagos?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the best way to see the Benagil caves?",
+        "seed": "Can I go on a kayak tour of Benagil caves from Lagos?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Is there a boat ride to Benagil caves?",
+        "seed": "What is the best way to see the Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Can you go to Benagil Cave without a tour?",
+        "seed": "What is the best way to see the Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What to wear to Benagil caves?",
+        "seed": "What is the best way to see the Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      }
+    ],
+    "can you go inside benagil cave": [
+      {
+        "question": "Can I go inside Benagil Cave?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Can you go to Benagil Cave without a tour?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Is it possible to walk into the Benagil Cave?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Is Benagil caves worth it?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the best time of day to see Benagil caves?",
+        "seed": "Is Benagil caves worth it?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What not to miss in the Algarve?",
+        "seed": "Is Benagil caves worth it?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the prettiest place in the Algarve?",
+        "seed": "What not to miss in the Algarve?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What are 10 must-sees in Portugal?",
+        "seed": "What not to miss in the Algarve?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What food is Algarve famous for?",
+        "seed": "What not to miss in the Algarve?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      }
+    ],
+    "benagil cave sup": [
+      {
+        "question": "Can you swim in Benagil Cave?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Can kayaks go into Benagil Cave?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Is Benagil caves worth it?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the best way to see the Benagil caves?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Can you go to Benagil Cave without a tour?",
+        "seed": "What is the best way to see the Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the best tour option for Benagil caves?",
+        "seed": "What is the best way to see the Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the best time to visit Benagil caves?",
+        "seed": "What is the best tour option for Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What to wear to Benagil caves?",
+        "seed": "What is the best tour option for Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Is there a boat ride to Benagil caves?",
+        "seed": "What is the best tour option for Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      }
+    ],
+    "how to visit benagil cave": [
+      {
+        "question": "What is the best way to see the Benagil Cave?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Can you visit Benagil caves on your own?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Is Benagil Cave Tour worth it?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the best time of day to see Benagil caves?",
+        "seed": null,
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is the best tour option for Benagil caves?",
+        "seed": "What is the best time of day to see Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What to wear to Benagil caves?",
+        "seed": "What is the best time of day to see Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "Can I swim to Benagil Cave?",
+        "seed": "What to wear to Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "How far is it from Lagos to the Benagil caves?",
+        "seed": "What to wear to Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      },
+      {
+        "question": "What is special about Benagil caves?",
+        "seed": "What to wear to Benagil caves?",
+        "source": "",
+        "url": "",
+        "answer": ""
+      }
+    ]
+  },
+  "all_questions": [
+    {
+      "question": "What is the best boat tour for Benagil caves?",
+      "seed": null,
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Is Benagil Cave Tour worth it?",
+      "seed": null,
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Is there a boat trip to Benagil caves in Albufeira?",
+      "seed": null,
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Do you need a tour for Benagil Cave?",
+      "seed": null,
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "What is the best way to see the Benagil Cave?",
+      "seed": "Do you need a tour for Benagil Cave?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "What to wear to Benagil caves?",
+      "seed": "Do you need a tour for Benagil Cave?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "What is the best time of day to visit Benagil caves?",
+      "seed": "What to wear to Benagil caves?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "How far is it from Lagos to the Benagil caves?",
+      "seed": "What to wear to Benagil caves?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Can you walk down to Benagil Cave?",
+      "seed": "What to wear to Benagil caves?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Can I book a private boat tour of Benagil caves?",
+      "seed": null,
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "What is the best way to see the Benagil caves?",
+      "seed": "Can I book a private boat tour of Benagil caves?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "What is the best tour to take in the Algarve?",
+      "seed": "Can I book a private boat tour of Benagil caves?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "What is the prettiest town on the Algarve coast?",
+      "seed": "What is the best tour to take in the Algarve?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "What should you not miss in Portugal?",
+      "seed": "What is the best tour to take in the Algarve?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Is Faro or Albufeira better?",
+      "seed": "What is the best tour to take in the Algarve?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Are the Benagil caves worth it?",
+      "seed": null,
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Can I take a private boat tour to Benagil caves?",
+      "seed": null,
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "How can I reach the Benagil sea cave?",
+      "seed": null,
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Can you go to Benagil Cave without a tour?",
+      "seed": "How can I reach the Benagil sea cave?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "What is the best tour option for Benagil caves?",
+      "seed": "How can I reach the Benagil sea cave?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "What is the best time of day to see Benagil caves?",
+      "seed": "What is the best tour option for Benagil caves?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Can kayaks go into Benagil Cave?",
+      "seed": null,
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Can I take a kayak tour of the Benagil caves in Lagos?",
+      "seed": null,
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Can I go cave kayaking in Portugal?",
+      "seed": null,
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Can you swim in Benagil Cave?",
+      "seed": null,
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Is it safe to swim in the ocean in Portugal?",
+      "seed": "Can you swim in Benagil Cave?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Is there a boat ride to Benagil caves?",
+      "seed": "Can you swim in Benagil Cave?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "What is the best time to visit Benagil caves?",
+      "seed": "Is there a boat ride to Benagil caves?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Which is nicer, Lagos or Albufeira?",
+      "seed": "How far is it from Lagos to the Benagil caves?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "What is the best kayak tour for Benagil Cave?",
+      "seed": null,
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Can I go on a kayak tour of Benagil caves from Lagos?",
+      "seed": null,
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Can I go inside Benagil Cave?",
+      "seed": null,
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Is it possible to walk into the Benagil Cave?",
+      "seed": null,
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Is Benagil caves worth it?",
+      "seed": null,
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "What not to miss in the Algarve?",
+      "seed": "Is Benagil caves worth it?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "What is the prettiest place in the Algarve?",
+      "seed": "What not to miss in the Algarve?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "What are 10 must-sees in Portugal?",
+      "seed": "What not to miss in the Algarve?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "What food is Algarve famous for?",
+      "seed": "What not to miss in the Algarve?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Can you visit Benagil caves on your own?",
+      "seed": null,
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "Can I swim to Benagil Cave?",
+      "seed": "What to wear to Benagil caves?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    },
+    {
+      "question": "What is special about Benagil caves?",
+      "seed": "What to wear to Benagil caves?",
+      "source": "",
+      "url": "",
+      "answer": ""
+    }
+  ],
+  "_subject": "benagil boat tour",
+  "_written_at": "2026-09-12T23:39:47",
+  "_pid": 18044
+}
