@@ -110,12 +110,16 @@ const LAT = 37.0868, LON = -8.4238;            // Algar de Benagil
 const weatherEl = document.getElementById('weatherWidget');
 const pill      = document.getElementById('conditionsPill');
 
+// The pill is the booking nudge once the verdict is in: it lands on the page's
+// own pinned calendar (#availability). Only a HOLD (heavy swell) verdict routes
+// to the sea-conditions read instead.
+let pillTarget = 'availability';
 if (pill) {
   const cond = pill.querySelector('.pill-conditions');
   if (cond) cond.addEventListener('click', () => {
-    const safety = document.getElementById('safety');
-    if (safety) safety.scrollIntoView({ behavior: 'smooth' });
-    else window.location.href = 'index.html#safety';
+    const el = document.getElementById(pillTarget) || document.getElementById('availability') || document.getElementById('safety');
+    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' });
+    else window.location.href = '/#availability';
   });
 }
 
@@ -217,9 +221,33 @@ if (weatherEl || pill) {
         '</div>';
     }
 
+    // ── VERDICT STRIP v4 (homepage) — chip, CTA beside it, evidence tiles ──
+    const stripWord = document.getElementById('strip-verdict-word');
+    if (stripWord) {
+      const word = waveH < 0.5 ? 'CALM' : waveH < 1.5 ? 'CHOPPY' : 'SWELL';
+      const wlab = waveH < 0.5 ? 'Boats and kayaks should be entering the cave today'
+                 : waveH < 1.5 ? 'Marginal — the captains decide at the slipway'
+                 : 'Over the ~1.5 m limit — the cave is likely closed';
+      const dotCls = waveH < 0.5 ? 'verdict-dot--go' : waveH < 1.5 ? 'verdict-dot--caution' : 'verdict-dot--hold';
+      stripWord.innerHTML = '<span class="verdict-dot ' + dotCls + '"></span> ' + word;
+      const wl = document.getElementById('strip-verdict-label'); if (wl) wl.textContent = wlab;
+      const sw = document.getElementById('strip-wave'); if (sw) sw.textContent = waveH.toFixed(1) + ' m';
+      const st = document.getElementById('strip-seatemp'); if (st) st.textContent = seaT != null ? seaT + '°C' : '—';
+      const cta = document.getElementById('verdict-cta');
+      if (cta) {
+        if (waveH < 1.5) { cta.innerHTML = 'Book the cave trip &rarr;'; cta.setAttribute('href', '#availability'); }
+        else { cta.innerHTML = 'Read the sea &amp; safety guide &rarr;'; cta.setAttribute('href', '#safety'); }
+      }
+      const tm = document.getElementById('verdict-time'), live = document.getElementById('verdict-live');
+      if (tm && live) { tm.textContent = now; live.hidden = false; }
+    }
+
     if (pill) {
       pill.querySelector('.pill-dot').className = 'pill-dot ' + vCls;
       pill.querySelector('.pill-wind').textContent = waveH.toFixed(1) + ' m';
+      const pc = pill.querySelector('.pill-cta');
+      if (pc) pc.textContent = waveH < 1.5 ? '· Book a boat →' : '· Sea conditions →';
+      pillTarget = waveH < 1.5 ? 'availability' : 'safety';
       pill.style.display = 'flex';
     }
   }).catch(() => {
@@ -237,6 +265,30 @@ if (pill) {
   }, { threshold: 0 });
   if (heroEnd) obs.observe(heroEnd);
 }
+
+// ── AFFILIATE LINK HANDLER (.vlink) ─────────────────────────
+// Booking URLs are base64-encoded in data-vurl rather than written as plain
+// hrefs (same pattern as emeraldcavevegas.com). The whole card is clickable;
+// this decodes and opens the GetYourGuide page in a new tab.
+function openVlink(target) {
+  if (!target || !target.dataset || !target.dataset.vurl) return;
+  try {
+    window.open(atob(target.dataset.vurl), '_blank', 'noopener,noreferrer');
+  } catch (e) { /* malformed token — do nothing */ }
+}
+document.addEventListener('click', e => {
+  const link = e.target.closest && e.target.closest('.vlink');
+  if (!link) return;
+  e.preventDefault();
+  openVlink(link);
+});
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const link = e.target.closest && e.target.closest('.vlink');
+  if (!link) return;
+  e.preventDefault();
+  openVlink(link);
+});
 
 // ── GALLERY DRAG-SCROLL ─────────────────────────────────────
 document.querySelectorAll('.scroll-gallery').forEach(g => {
