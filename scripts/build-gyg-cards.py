@@ -119,7 +119,7 @@ def craft(t):
 
 
 FAR_ORIGIN = re.compile(r"lisbon|lisboa|sevill|faro\b|olh[aã]o|tavira|quarteira|vilamoura|sintra|porto\b", re.I)
-NOT_CAVE_TRIP = re.compile(r"\bhik|walk|trek|e-?bike|bike|jeep|safari|buggy|quad|tuk|segway|charter|yacht", re.I)
+NOT_CAVE_TRIP = re.compile(r"\bhik|walk|trek|e-?bike|bike|jeep|safari|buggy|quad|tuk|segway|charter|yacht|4x4|castle|silves|monchique|winery|vineyard|city tour", re.I)
 
 
 def title_prefix_town(t):
@@ -254,7 +254,10 @@ def card(t, rank):
 
 
 def is_private(t):
-    return bool(re.search(r"\bprivate\b", f(t, "title"), re.I))
+    """The title alone is not enough: t195731 is titled 'Benagil Cave & Marinha Beach Boat Tour'
+    and its GYG slug is 'algarve-coast-private-boat-tour' at $447 per hull (audit, 2026-09-12)."""
+    hay = " ".join((f(t, "title"), f(t, "url"), f(t, "abstract")))
+    return bool(re.search(r"\bprivate\b|\bprivado\b|per boat|per group|whole boat|exclusive use", hay, re.I))
 
 
 def ranked(pool, sel, min_reviews):
@@ -280,7 +283,7 @@ def widget_auto():
     return '<div data-gyg-widget="auto" data-gyg-partner-id="%s" data-gyg-cmp="%s-a" data-gyg-locale-code="en-US" data-gyg-currency="USD"></div>' % (PARTNER, CMP)
 
 
-DISCLAIMER = ('<p class="t-note ec-note">Prices are GetYourGuide "from" prices in US dollars, ratings and review counts as captured 12 September 2026; '
+DISCLAIMER = ('<p class="t-note ec-note">Prices are GetYourGuide "from" prices in US dollars, per person unless the card says "priced per boat" (private boats are listed after the per-person tours), ratings and review counts as captured 12 September 2026; '
               'they move with season and availability &#8212; the live widget and the booking page are the reference. Sea permitting: swell over about 1.5 m closes the cave. '
               'Booking through these links may earn us a commission at no extra cost to you; it never changes the order or the verdicts.</p>')
 
@@ -333,12 +336,16 @@ def main():
     }
 
     def pick_hero(slug, ids):
-        """Hero = the calendar: a per-person tour with a real review base, not a private hull."""
+        """Hero = the calendar: a per-person BOAT with a real review base (the town pages are written
+        around boats; a kayak hero on the Carvoeiro page contradicted its own copy - audit 2026-09-12),
+        then any per-person tour, never a private hull."""
         if slug in HERO_OVERRIDES:
             return HERO_OVERRIDES[slug]
-        for i in ids:
-            if reviews(pool[i]) >= HERO_MIN_REVIEWS and not is_private(pool[i]):
-                return i
+        for want_boat in (True, False):
+            for i in ids:
+                t = pool[i]
+                if reviews(t) >= HERO_MIN_REVIEWS and not is_private(t) and (craft(t) != "kayak" or not want_boat):
+                    return i
         for i in ids:
             if not is_private(pool[i]):
                 return i
@@ -360,12 +367,17 @@ def main():
         out["og"][slug] = og_image(t)
         out["hero_meta"][slug] = {"id": tid, "title": clean_title(t), "price": price(t), "rating": rating(t), "reviews": reviews(t),
                                   "aff": aff_url(t), "widget": widget_availability(tid), "lead": hero_lead(pool, tid)}
+    TOWN_OF_SLUG = {"benagil-cave-tour-from-carvoeiro": "carvoeiro", "benagil-cave-tour-from-armacao-de-pera": "armacao",
+                    "benagil-cave-tour-from-portimao": "portimao", "benagil-cave-tour-from-albufeira": "albufeira",
+                    "benagil-cave-tour-from-lagos": "lagos"}
     for slot, ids in SLOTS.items():
-        out["slots"][slot] = {"ids": ids, "html_by_page": {}, "count_by_page": {}}
+        out["slots"][slot] = {"ids": ids, "html_by_page": {}, "count_by_page": {}, "native_by_page": {}}
         for slug, hero in HEROES.items():
             h, used = cards_html(pool, ids, exclude=hero)
             out["slots"][slot]["html_by_page"][slug] = h
             out["slots"][slot]["count_by_page"][slug] = len(used)
+            tw = TOWN_OF_SLUG.get(slot)
+            out["slots"][slot]["native_by_page"][slug] = sum(1 for i in used if tw and tw in towns(pool[i]))
     json.dump(out, io.open(os.path.join(HERE, "gyg-cards.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
 
     def og_meta(slug):
@@ -393,7 +405,8 @@ def main():
     inject(ops, "ops-note", DISCLAIMER)
     # inline "on GetYourGuide" links inside the editorial profiles (empty when the operator has no listing)
     for key, pat in OPLINKS.items():
-        hits = [i for i, t in pool.items() if re.search(pat, t.get("provider") or "", re.I)]
+        # never the page's own hero (it has the pinned calendar) - one ask per product per page
+        hits = [i for i, t in pool.items() if re.search(pat, t.get("provider") or "", re.I) and i != HEROES["operators"]]
         hits.sort(key=lambda i: (-reviews(pool[i]), -value(pool[i])))
         if hits:
             t = pool[hits[0]]
