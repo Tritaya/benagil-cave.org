@@ -9,10 +9,12 @@ Slots are SELECTORS (departure town x craft), not hand-picked id lists; the orde
 the stated rule: value (price x rating) desc, then reviews desc. Floors keep 5-review products
 off the page. HERO_OVERRIDES exists for a deliberate editorial pick; print the chosen heroes.
 
-Lanes (partner-global cmp namespace, device-named):
-  bcorg     product links on cards
-  bcorg-bt  the pinned availability calendar (one per page, id="availability")
-  bcorg-a   the auto widget end slot
+Lanes (partner-global cmp namespace, hostname prefix, device-named; since 2026-09-14):
+  benagil-cave-btc  product links on cards
+  benagil-cave-bti  inline "on GetYourGuide" links inside operator profiles
+  benagil-cave-bt   the pinned availability calendar (one per page, id="availability")
+  benagil-cave-a    the auto widget end slot
+  benagil-cave      the loader's default only (data-gyg-partner-cmp)
 """
 import base64
 import glob
@@ -25,7 +27,9 @@ import re
 HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.path.dirname(HERE)
 PARTNER = "1Q7ZSYC"
-CMP = "bcorg"
+CMP = "benagil-cave"   # hostname without TLD, like the rest of the partner account (was "bcorg" until 2026-09-14)
+# lanes name the DEVICE (_CTA-KIT.md): <site>-btc product cards, <site>-bti inline "on GetYourGuide" links in
+# operator profiles, <site>-bt the pinned availability widget, <site>-a the auto widget, bare <site> = loader fallback
 CARD_MIN_REVIEWS = 20
 HERO_MIN_REVIEWS = 100
 CARDS_PER_SLOT = 6
@@ -223,8 +227,8 @@ def bare_url(t):
     return (t.get("url") or "").split("?")[0]
 
 
-def aff_url(t):
-    return "%s?partner_id=%s&utm_medium=online_publisher&cmp=%s" % (bare_url(t), PARTNER, CMP)
+def aff_url(t, device="btc"):
+    return "%s?partner_id=%s&utm_medium=online_publisher&cmp=%s-%s" % (bare_url(t), PARTNER, CMP, device)
 
 
 def b64(u):
@@ -492,7 +496,7 @@ def main():
         if hits:
             t = pool[hits[0]]
             link = (' Also bookable <a class="vlink op-book" data-vurl="%s" role="link" rel="sponsored nofollow noopener" tabindex="0">on GetYourGuide (%s, %.1f&#9733;, %s reviews) &#8594;</a>'
-                    % (b64(aff_url(t)), html.escape(price(t)), rating(t), format(reviews(t), ",")))
+                    % (b64(aff_url(t, "bti")), html.escape(price(t)), rating(t), format(reviews(t), ",")))
         else:
             link = ""
         inject(ops, "oplink-" + key, link, inline=True)
