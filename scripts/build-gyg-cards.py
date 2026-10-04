@@ -154,13 +154,18 @@ def boat_access(t):
         return "none"
     # judge each include line on its own: t1060580 includes "1-hour guided kayak tour" AND
     # "(optional) cliff jumping" - the optional is the jump, not the kayak
-    if any(BOATWORD.search(str(x)) and not re.search(r"optional|additional fee|extra cost", str(x), re.I)
-           for x in t.get("includes") or []):
+    boat_lines = [str(x) for x in t.get("includes") or [] if BOATWORD.search(str(x)) and not re.search(r"optional|additional fee|extra cost", str(x), re.I)]
+    # t654398: "Benagil Cave boat tour (if group option selected)" - included on one option only (audit 2026-10-04)
+    if boat_lines and all(re.search(r"\bif\b[^)]{0,40}option", x, re.I) for x in boat_lines):
+        return "partial"
+    if boat_lines:
         return "included"
     if BOATWORD.search(inc + " " + exc + " " + gtk) and re.search(r"optional|additional fee|extra cost", inc + " " + exc + " " + gtk, re.I):
         return "optional"
+    # t625908: the boat is a fixed itinerary stop but "Boat tour ticket" is excluded - not optional, a
+    # separate ticket (and its listing refuses refunds if the sea cancels the boat) (audit 2026-10-04)
     if BOATWORD.search(exc) and re.search(r"(embark|board)[^.]{0,60}boat|boat (tour|ride|trip) (to|into|inside)", desc, re.I):
-        return "optional"
+        return "ticket"
     if BOATWORD.search(exc):
         return "none"
     return None
@@ -168,7 +173,7 @@ def boat_access(t):
 
 def craft(t):
     title = f(t, "title")
-    if boat_access(t) in ("none", "optional"):
+    if boat_access(t) in ("none", "optional", "ticket"):
         return "land"
     if KAYAK.search(title):
         return "kayak"
@@ -256,13 +261,17 @@ def what(t):
     if ba is not None:   # a day trip by road from Faro or Lisbon: say what happens at the cave
         return {"none": "Day trip by road; views the cave from the clifftop, no boat",
                 "optional": "Day trip by road; the cave boat is optional, at extra cost",
+                "ticket": "Day trip by road; a boat stop on the itinerary, but the boat ticket costs extra",
+                "partial": "Day trip by road; boat included on the small-group option only",
                 "included": "Day trip by road + %s to the cave, sea permitting" % ("guided kayak" if c == "kayak" else "boat")}[ba]
     tw = towns(t)
     parts = []
     if is_private(t) and not far_origin(t):
         # a hull hired for your group: "yacht" matches the catamaran pattern, and the listings do not
-        # say whether a charter goes in or holds at the arch (2026-10-04)
-        return "Private charter for your group" + (", from " + " / ".join(TOWN_LABEL[x] for x in tw[:2]) if tw else "")
+        # say whether a charter goes in or holds at the arch (2026-10-04). Capacity from GYG's own unit.
+        cap = re.search(r"up to (\d+)", t.get("priceCategory") or "")
+        return ("Private charter for up to %s" % cap.group(1) if cap else "Private charter for your group") + \
+               (", from " + " / ".join(TOWN_LABEL[x] for x in tw[:2]) if tw else "")
     parts.append({"kayak": "Guided kayak/SUP into the cave", "cat": "Catamaran, views the cave from the entrance", "boat": "Boat, enters the cave sea permitting"}[c])
     if tw:
         parts.append("from " + " / ".join(TOWN_LABEL[x] for x in tw[:2]))
@@ -317,12 +326,13 @@ def card(t, rank):
     if price(t):
         meta.append('<span class="ec-price">from %s</span>' % e(price(t)))
     if not (is_private(t) and not far_origin(t)):   # a charter's chip is "Private, priced per boat" alone
-        meta.append('<span class="ec-reach ec-reach-%s">%s</span>' % ("boat" if c == "land" else c, {"kayak": "Kayak / SUP", "cat": "Catamaran", "boat": "Boat", "land": "Clifftop, no boat" if boat_access(t) == "none" else "Boat optional"}[c]))
+        meta.append('<span class="ec-reach ec-reach-%s">%s</span>' % ("boat" if c == "land" else c, {"kayak": "Kayak / SUP", "cat": "Catamaran", "boat": "Boat", "land": {"none": "Clifftop, no boat", "ticket": "Boat ticket extra", "partial": "Boat on one option"}.get(boat_access(t), "Boat optional")}[c]))
     if is_private(t):
         meta.append('<span class="ec-reach ec-reach-cat">Private, priced per boat</span>')
     # 2,000+ reviews is the more useful chip than any platform badge ("Certified by GetYourGuide"
     # was hiding "Most booked" on the 13,888-review RIB)
-    b = "Most booked" if reviews(t) >= 2000 else badge(t)
+    # literal, not "Most booked": with the most-booked rows a page carried four "Most booked" chips (audit 2026-10-04)
+    b = "2,000+ reviews" if reviews(t) >= 2000 else badge(t)
     if b:
         meta.append('<span class="ec-hot">%s</span>' % e(b))
     if t.get("freeCancellation"):
@@ -561,6 +571,19 @@ def main():
     for slug, tw in TOWN_OF_SLUG.items():
         h, ids = mostbooked(slug, ranked(pool, town_sel(tw), CARD_MIN_REVIEWS), slug)
         out["mostbooked"][slug] = {"html": h, "ids": ids}
+    # what the far pages actually SHOW (pinned + cards), so their prose counts cannot drift from the
+    # list: the Lisbon page said "3 of 8" over seven trips (audit 2026-10-04)
+    out["far_stats"] = {}
+    for slug in FAR_TOWNS:
+        _, used = cards_html(pool_all, SLOTS[slug], exclude=HEROES[slug])
+        shown = [HEROES[slug]] + used
+        st = {"shown": len(shown)}
+        for i in shown:
+            k = boat_access(pool_all[i]) or "none"
+            st[k] = st.get(k, 0) + 1
+        st["min_price_none"] = min((price_num(pool_all[i]) for i in shown if boat_access(pool_all[i]) == "none"), default=0)
+        st["min_price"] = min(price_num(pool_all[i]) for i in shown)
+        out["far_stats"][slug] = st
     h, ids = mostbooked("benagil-cave-kayak", SLOTS["kayak"], "kayak-only")
     out["mostbooked"]["benagil-cave-kayak"] = {"html": h, "ids": ids}
     # private charters row for the boat page: never a product the page already shows
