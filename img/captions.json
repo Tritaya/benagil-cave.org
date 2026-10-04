@@ -131,5 +131,19 @@
   "kind": "info",
   "w": 1200,
   "h": 675
+ },
+ "slide-and-splash": {
+  "alt": "Colourful water slides winding down a hillside into a large pool at a water park in Lagoa, in the central Algarve",
+  "caption": "Slide & Splash sits on a hillside at Estombar, Lagoa, about 10 km by road from Carvoeiro.",
+  "kind": "hero",
+  "w": 1200,
+  "h": 630
+ },
+ "slide-and-splash-know-before-you-go": {
+  "alt": "Infographic for Slide & Splash: open 1 April to 31 October from 10:00, closing 17:00 to 18:00 by month; most slides need 1 m height, float slides from 0.90 m with an adult; online check-in required; about 15 minutes from Carvoeiro",
+  "caption": "The park's own rules from its 2026 listing and website. Hours change by month; check-in online before you go.",
+  "kind": "info",
+  "w": 1200,
+  "h": 675
  }
 }
