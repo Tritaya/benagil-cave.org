@@ -145,5 +145,19 @@
   "kind": "info",
   "w": 1200,
   "h": 675
+ },
+ "benagil-cave-tour-from-faro": {
+  "alt": "Illustration of walkers at a clifftop fence looking down through the round skylight of Benagil Cave to the beach inside",
+  "caption": "An illustration, not a photo. Most day trips from Faro see Benagil like this, from the clifftop path, without a boat.",
+  "kind": "hero",
+  "w": 1200,
+  "h": 630
+ },
+ "benagil-cave-tour-from-lisbon": {
+  "alt": "Illustration of a tour minivan at a clifftop viewpoint on the Algarve coast, with a small boat heading for the sea caves below",
+  "caption": "An illustration, not a photo. From Lisbon it is a long day by road: about three hours each way to the cave coast.",
+  "kind": "hero",
+  "w": 1200,
+  "h": 630
  }
 }

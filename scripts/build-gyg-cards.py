@@ -72,6 +72,12 @@ HERO_OVERRIDES = {
     # the kayak page is written around the max-6 5.0/547 paddle; t732531 (a kayak tour whose title
     # omits the word) out-baskets it by $5 and must not take the calendar
     "benagil-cave-kayak": 670049,
+    # Faro: the page's verdict is "most Faro day trips never go on the water; this one does" - the
+    # calendar is the boat (t874501, boards at Armacao de Pera), never the 3,302-review clifftop day
+    # t304398 ("This is not a boat tour"), which is a choice card instead (2026-10-04)
+    "benagil-cave-tour-from-faro": 874501,
+    # Lisbon: the most-reviewed day trip that includes the cave boat (sea and availability permitting)
+    "benagil-cave-tour-from-lisbon": 847548,
 }
 # site-hosted hero (img/<file>.webp, stamped "benagil-cave.org") is the og:image when it exists;
 # the GYG 148 image of the pinned tour is the fallback
@@ -129,8 +135,41 @@ def clean_title(t):
     return s.strip()
 
 
+# "cruise port" is a pickup point, not a boat: it made t650425 / t616467 read "boat included" (2026-10-04)
+BOATWORD = re.compile(r"boat|cruise(?!\s*(?:port|ship terminal))|kayak|catamaran|\bsail|\bsup\b|paddle", re.I)
+
+
+def boat_access(t):
+    """Far-origin day trips only (Faro, Lisbon): does the price include getting onto the water?
+    'included' / 'optional' (sold as an extra, or the ticket excluded) / 'none' (a clifftop day).
+    Most Faro day trips say "This is not a boat tour" (2026-10-04) - their cards must not read
+    "Boat, enters the cave". Not applied to local departures, whose excludes often list kayaks."""
+    if not far_origin(t):
+        return None
+    inc = " | ".join(str(x) for x in t.get("includes") or [])
+    exc = " | ".join(str(x) for x in t.get("excludes") or [])
+    gtk = f(t, "goodToKnow")
+    desc = f(t, "description")
+    if re.search(r"not a boat tour|land-based tour|without entering it by boat", gtk + " " + desc, re.I):
+        return "none"
+    # judge each include line on its own: t1060580 includes "1-hour guided kayak tour" AND
+    # "(optional) cliff jumping" - the optional is the jump, not the kayak
+    if any(BOATWORD.search(str(x)) and not re.search(r"optional|additional fee|extra cost", str(x), re.I)
+           for x in t.get("includes") or []):
+        return "included"
+    if BOATWORD.search(inc + " " + exc + " " + gtk) and re.search(r"optional|additional fee|extra cost", inc + " " + exc + " " + gtk, re.I):
+        return "optional"
+    if BOATWORD.search(exc) and re.search(r"(embark|board)[^.]{0,60}boat|boat (tour|ride|trip) (to|into|inside)", desc, re.I):
+        return "optional"
+    if BOATWORD.search(exc):
+        return "none"
+    return None
+
+
 def craft(t):
     title = f(t, "title")
+    if boat_access(t) in ("none", "optional"):
+        return "land"
     if KAYAK.search(title):
         return "kayak"
     if CAT.search(title) or re.search(r"catamaran", f(t, "description")[:400], re.I):   # "sail along the coast" in a small boat's blurb is not a catamaran
@@ -213,8 +252,17 @@ def base_true(t):
 
 def what(t):
     c = craft(t)
+    ba = boat_access(t)
+    if ba is not None:   # a day trip by road from Faro or Lisbon: say what happens at the cave
+        return {"none": "Day trip by road; views the cave from the clifftop, no boat",
+                "optional": "Day trip by road; the cave boat is optional, at extra cost",
+                "included": "Day trip by road + %s to the cave, sea permitting" % ("guided kayak" if c == "kayak" else "boat")}[ba]
     tw = towns(t)
     parts = []
+    if is_private(t) and not far_origin(t):
+        # a hull hired for your group: "yacht" matches the catamaran pattern, and the listings do not
+        # say whether a charter goes in or holds at the arch (2026-10-04)
+        return "Private charter for your group" + (", from " + " / ".join(TOWN_LABEL[x] for x in tw[:2]) if tw else "")
     parts.append({"kayak": "Guided kayak/SUP into the cave", "cat": "Catamaran, views the cave from the entrance", "boat": "Boat, enters the cave sea permitting"}[c])
     if tw:
         parts.append("from " + " / ".join(TOWN_LABEL[x] for x in tw[:2]))
@@ -268,7 +316,8 @@ def card(t, rank):
     meta = ['<span class="ec-rating">%.1f&#9733; (%s)</span>' % (rating(t), format(reviews(t), ","))]
     if price(t):
         meta.append('<span class="ec-price">from %s</span>' % e(price(t)))
-    meta.append('<span class="ec-reach ec-reach-%s">%s</span>' % (c, {"kayak": "Kayak / SUP", "cat": "Catamaran", "boat": "Boat"}[c]))
+    if not (is_private(t) and not far_origin(t)):   # a charter's chip is "Private, priced per boat" alone
+        meta.append('<span class="ec-reach ec-reach-%s">%s</span>' % ("boat" if c == "land" else c, {"kayak": "Kayak / SUP", "cat": "Catamaran", "boat": "Boat", "land": "Clifftop, no boat" if boat_access(t) == "none" else "Boat optional"}[c]))
     if is_private(t):
         meta.append('<span class="ec-reach ec-reach-cat">Private, priced per boat</span>')
     # 2,000+ reviews is the more useful chip than any platform badge ("Certified by GetYourGuide"
@@ -305,6 +354,12 @@ def is_sup(t):
 def is_private(t):
     """The title alone is not enough: t195731 is titled 'Benagil Cave & Marinha Beach Boat Tour'
     and its GYG slug is 'algarve-coast-private-boat-tour' at $447 per hull (audit, 2026-09-12)."""
+    # GYG's own price unit decides first: "per group up to 10" is a hull, "per person" is a seat.
+    # The keyword rule flagged t847548 ($181 per person, Lisbon day trip) as private because its
+    # text offers a "private hotel pickup" option (2026-10-04).
+    pc = (t.get("priceCategory") or "").lower()
+    if pc:
+        return "group" in pc
     hay = " ".join((f(t, "title"), f(t, "url"), f(t, "description")[:600]))
     # ... and the word alone is not enough either: t390616's slug says "private-guided-boat-tour"
     # at $37 with 434 reviews, which is a per-person seat (audit, 2026-09-13). A hull costs hundreds.
@@ -374,8 +429,29 @@ def hero_lead(pool, tid):
         e((t.get("abstract") or "")[:220])))
 
 
+FAR_TOWNS = {   # day trips BY ROAD from cities with no Benagil launch (2026-10-04, inbox-20261004-002)
+    "benagil-cave-tour-from-faro": re.compile(r"\bfaro\b", re.I),
+    "benagil-cave-tour-from-lisbon": re.compile(r"lisbon|lisboa", re.I),
+}
+FAR_NOT = re.compile(r"\bhik|e-?bike|\bbike|jeep|buggy|quad|segway|yacht|charter", re.I)
+MOSTBOOKED_MIN = 500   # "most booked" must mean it: a row of 30-review products would be a second list, not a signal
+MOSTBOOKED_N = 3
+
+
 def main():
-    pool = {i: t for i, t in load().items() if base_true(t)}
+    everything = load()
+    pool = {i: t for i, t in everything.items() if base_true(t)}
+    # far pool: Benagil day trips from Faro / Lisbon (never base-true: they are not Benagil departures)
+    far_pool = {i: t for i, t in everything.items()
+                if i not in pool and BEN.search(f(t, "title") + " " + f(t, "description")) and far_origin(t)
+                and not FAR_NOT.search(f(t, "title")) and not is_private(t)}
+    # private hulls and yachts that LEAVE from the coast (base-true filters charters out of the main lists)
+    priv_pool = {i: t for i, t in everything.items()
+                 if i not in pool and BEN.search(f(t, "title") + " " + f(t, "description")) and not far_origin(t)
+                 and is_private(t) and craft(t) != "kayak"}
+    pool_all = dict(pool)
+    pool_all.update(far_pool)
+    pool_all.update(priv_pool)
     is_kayak = lambda t: craft(t) == "kayak"
     is_speed = lambda t: craft(t) == "boat" and (SPEED.search(f(t, "title") + " " + f(t, "includes") + " " + f(t, "description")[:300]) is not None)
     near = lambda t: craft(t) != "kayak" and any(x in towns(t) for x in ("carvoeiro", "armacao", "benagil"))
@@ -414,6 +490,10 @@ def main():
         "benagil-cave-tour-from-albufeira": town_slot("albufeira", catd_ids),
         "benagil-cave-tour-from-lagos": town_slot("lagos", catd_ids),
     }
+    for slug, pat in FAR_TOWNS.items():
+        SLOTS[slug] = ranked(far_pool, lambda t, p=pat: p.search(f(t, "title")) is not None, CARD_MIN_REVIEWS)
+    # private boats/yachts from the coast, plus any private hull already in the main pool
+    SLOTS["private"] = ranked(pool_all, lambda t: is_private(t) and not far_origin(t) and craft(t) != "kayak", CARD_MIN_REVIEWS)
 
     def pick_hero(slug, ids):
         """Hero = the calendar: a per-person BOAT with a real review base (the town pages are written
@@ -423,11 +503,11 @@ def main():
             return HERO_OVERRIDES[slug]
         for want_boat in (True, False):
             for i in ids:
-                t = pool[i]
-                if reviews(t) >= HERO_MIN_REVIEWS and not is_private(t) and (craft(t) != "kayak" or not want_boat):
+                t = pool_all[i]
+                if reviews(t) >= HERO_MIN_REVIEWS and not is_private(t) and craft(t) != "land" and (craft(t) != "kayak" or not want_boat):
                     return i
         for i in ids:
-            if not is_private(pool[i]):
+            if not is_private(pool_all[i]):
                 return i
         return ids[0]
 
@@ -443,26 +523,53 @@ def main():
     # page's calendar is a KAYAK (never a SUP - that is its own mode on the same page)
     HEROES["benagil-boat-tour"] = pick_hero("benagil-boat-tour", SLOTS["boat-any"])
     HEROES["benagil-cave-kayak"] = pick_hero("benagil-cave-kayak", SLOTS["kayak-only"])
+    for slug in FAR_TOWNS:
+        HEROES[slug] = pick_hero(slug, SLOTS[slug])
 
     out = {"partner": PARTNER, "cmp": CMP, "stamp": "12 September 2026", "heroes": HEROES, "slots": {}, "og": {}, "hero_meta": {},
-           "disclaimer": DISCLAIMER, "widget_auto": widget_auto()}
+           "disclaimer": DISCLAIMER, "widget_auto": widget_auto(), "mostbooked": {}, "private_row": {}}
     for slug, tid in HEROES.items():
-        t = pool[tid]
+        t = pool_all[tid]
         site_file = SITE_HERO.get(slug, slug + ".webp")
         out["og"][slug] = ("https://benagil-cave.org/img/" + site_file) if os.path.exists(os.path.join(HERE, "..", "img", site_file)) else og_image(t)
         out["hero_meta"][slug] = {"id": tid, "title": clean_title(t), "price": price(t), "rating": rating(t), "reviews": reviews(t),
-                                  "aff": aff_url(t), "widget": widget_availability(tid), "lead": hero_lead(pool, tid)}
+                                  "aff": aff_url(t), "widget": widget_availability(tid), "lead": hero_lead(pool_all, tid)}
     TOWN_OF_SLUG = {"benagil-cave-tour-from-carvoeiro": "carvoeiro", "benagil-cave-tour-from-armacao-de-pera": "armacao",
                     "benagil-cave-tour-from-portimao": "portimao", "benagil-cave-tour-from-albufeira": "albufeira",
                     "benagil-cave-tour-from-lagos": "lagos"}
     for slot, ids in SLOTS.items():
         out["slots"][slot] = {"ids": ids, "html_by_page": {}, "count_by_page": {}, "native_by_page": {}}
         for slug, hero in HEROES.items():
-            h, used = cards_html(pool, ids, exclude=hero)
+            h, used = cards_html(pool_all, ids, exclude=hero)
             out["slots"][slot]["html_by_page"][slug] = h
             out["slots"][slot]["count_by_page"][slug] = len(used)
             tw = TOWN_OF_SLUG.get(slot)
-            out["slots"][slot]["native_by_page"][slug] = sum(1 for i in used if tw and tw in towns(pool[i]))
+            out["slots"][slot]["native_by_page"][slug] = sum(1 for i in used if tw and tw in towns(pool_all[i]))
+
+    # "Most booked" rows (user decision 2026-10-04, inbox-20261004-002 card sweep): the card lists stay
+    # value-ordered and capped; underneath, the page's own departures with the most reviews that the
+    # cap left out - so the $14 Portimao RIB with 8,920 reviews is on the Portimao page.
+    def mostbooked(slug, own_ids, list_slot):
+        _, used = cards_html(pool_all, SLOTS[list_slot], exclude=HEROES[slug])
+        cand = [i for i in own_ids if i not in used and i != HEROES[slug] and not is_private(pool_all[i])
+                and reviews(pool_all[i]) >= MOSTBOOKED_MIN]
+        cand.sort(key=lambda i: -reviews(pool_all[i]))
+        cand = cand[:MOSTBOOKED_N]
+        if not cand:
+            return "", []
+        return '<ol class="ec-tours">\n' + "\n".join(card(pool_all[i], n + 1) for n, i in enumerate(cand)) + "\n    </ol>", cand
+    for slug, tw in TOWN_OF_SLUG.items():
+        h, ids = mostbooked(slug, ranked(pool, town_sel(tw), CARD_MIN_REVIEWS), slug)
+        out["mostbooked"][slug] = {"html": h, "ids": ids}
+    h, ids = mostbooked("benagil-cave-kayak", SLOTS["kayak"], "kayak-only")
+    out["mostbooked"]["benagil-cave-kayak"] = {"html": h, "ids": ids}
+    # private charters row for the boat page: never a product the page already shows
+    boat_used = {HEROES["benagil-boat-tour"]}
+    for s in ("speedboat", "boat-near", "cat-dolphin"):   # the groups the boat page renders
+        boat_used.update(cards_html(pool_all, SLOTS[s], exclude=HEROES["benagil-boat-tour"])[1])
+    priv = [i for i in SLOTS["private"] if i not in boat_used]
+    h, used = cards_html(pool_all, priv, limit=3) if priv else ("", [])
+    out["private_row"]["benagil-boat-tour"] = {"html": h, "ids": used}
     json.dump(out, io.open(os.path.join(HERE, "gyg-cards.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
 
     def og_meta(slug):
@@ -510,7 +617,7 @@ def main():
     # report
     print("pool (base-true, both shelves):", len(pool))
     for slug, tid in HEROES.items():
-        t = pool[tid]
+        t = pool_all[tid]
         print("HERO %-40s t%-8d %-6s %.1f/%-5d %s | %s" % (slug, tid, price(t), rating(t), reviews(t), clean_title(t)[:60], ",".join(towns(t))))
     used = sorted({i for ids in SLOTS.values() for i in ids[:CARDS_PER_SLOT + 1]} | set(HEROES.values()))
     print("distinct tours placed (approx):", len(used))
