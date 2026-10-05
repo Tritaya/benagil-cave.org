@@ -173,7 +173,7 @@ def boat_access(t):
 
 def craft(t):
     title = f(t, "title")
-    if boat_access(t) in ("none", "optional", "ticket"):
+    if boat_access(t) in ("none", "optional", "ticket", "partial"):
         return "land"
     if KAYAK.search(title):
         return "kayak"
@@ -384,10 +384,52 @@ def ranked(pool, sel, min_reviews):
     return ids
 
 
+def prov_norm(t):
+    """'TOUR TUNER' and 'TourTuner 4 You' are one operator (2026-10-05)."""
+    p = re.sub(r"[^a-z0-9]", "", (t.get("provider") or "").lower())
+    p = re.sub(r"4you$|foryou$|ltda?$|lda$|limited$", "", p)
+    return re.sub(r"tours?", "", p) or p
+
+
+def dedupe(pool, ids, exclude=None):
+    """Operators relist one trip under several titles: the Lisbon page showed three Lisbon Attractions
+    listings, two with the same photo, and two TourTuner listings with word-for-word the same text
+    (user-caught 2026-10-05). A card is a duplicate when it repeats a photo, or an operator's text, already
+    on the page (the pinned calendar included); a day trip from Faro or Lisbon gets one card per operator
+    per kind of day, land or water - Flow Adventures' $46 clifftop day and its kayak day are different
+    products and both stay, while Lisbon Attractions' three boat-day relistings collapse into the hero."""
+    seen_img, seen_pd, seen_far = set(), set(), set()
+    def keys(t):
+        return img_hash(t), (prov_norm(t), re.sub(r"\s+", " ", f(t, "description"))[:160].lower())
+    def far_key(t):
+        return (prov_norm(t), boat_access(t) == "none") if far_origin(t) else None
+    if exclude is not None and exclude in pool:
+        h, pd = keys(pool[exclude])
+        seen_img.add(h); seen_pd.add(pd)
+        if far_key(pool[exclude]):
+            seen_far.add(far_key(pool[exclude]))
+    out = []
+    for i in ids:
+        if i == exclude:
+            continue
+        t = pool[i]
+        h, pd = keys(t)
+        fk = far_key(t)
+        if (h and h in seen_img) or pd in seen_pd or (fk and fk in seen_far):
+            continue
+        out.append(i)
+        if h:
+            seen_img.add(h)
+        seen_pd.add(pd)
+        if fk:
+            seen_far.add(fk)
+    return out
+
+
 def cards_html(pool, ids, exclude=None, limit=CARDS_PER_SLOT):
     """Value order, but the slot's MOST-BOOKED product always gets a card (the honest budget pick the
     doctrine asks for): a $14 RIB with 13,888 reviews must not vanish behind six $50 seats."""
-    ids = [i for i in ids if i != exclude]
+    ids = dedupe(pool, ids, exclude)
     shown = ids[:limit]
     # ... and so does the CHEAPEST per-person seat, so a "from $23" in the prose always has a card
     # behind it (the kayak page said $23 over a list whose cheapest card was $34 - audit 2026-09-13)
