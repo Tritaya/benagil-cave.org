@@ -46,9 +46,15 @@ TOWNS = {
     "albufeira": re.compile(r"albufeira", re.I),
     "lagos": re.compile(r"\blagos\b", re.I),
     "vilamoura": re.compile(r"vilamoura|quarteira", re.I),
+    # a cove 2 km west of Benagil, not a town: t420262 is titled "Carvoeiro:" but meets "in the parking
+    # of carvalho beach" and filed as the Carvoeiro page's top card (audit 2026-10-04, inbox -024)
+    "carvalho": re.compile(r"carvalho", re.I),
 }
 TOWN_LABEL = {"benagil": "Benagil beach", "carvoeiro": "Carvoeiro", "armacao": "Armação de Pêra", "portimao": "Portimão",
-              "albufeira": "Albufeira", "lagos": "Lagos", "vilamoura": "Vilamoura"}
+              "albufeira": "Albufeira", "lagos": "Lagos", "vilamoura": "Vilamoura", "carvalho": "Praia do Carvalho"}
+# a launch BEACH named in the meeting clause beats the town in the title prefix (the title names the
+# nearest resort, the description names where you actually get in the water)
+LAUNCH_BEACHES = ("carvalho",)
 
 # editorial operator profiles on operators.html -> provider-name patterns for inline GYG links
 OPLINKS = {
@@ -92,6 +98,21 @@ def f(t, k):
     return str(v or "")
 
 
+# GetYourGuide's partner catalogue snapshot: tours taken offline since the scrape must not be carded
+# (t453070 and t1067206 were, 2026-10-05). Missing file = no filter.
+OFFLINE_CSV = os.path.join(SITE, "..", "..", "agentic-dashboard", "analytics", "gyg", "data", "catalogue", "offline_tour_ids.csv.gz")
+
+
+def offline_ids():
+    import csv
+    import gzip
+    if not os.path.exists(OFFLINE_CSV):
+        print("WARNING: no catalogue snapshot at %s - offline tours not filtered" % OFFLINE_CSV)
+        return set()
+    with gzip.open(OFFLINE_CSV, "rt", encoding="utf-8") as fh:
+        return {int(r["tour.tour_id_ex"]) for r in csv.DictReader(fh) if (r.get("tour.tour_id_ex") or "").strip().isdigit()}
+
+
 def load():
     by = {}
     for fp in sorted(glob.glob(os.path.join(HERE, "gyg_*.json"))):
@@ -99,7 +120,10 @@ def load():
         d = d if isinstance(d, list) else d.get("products") or d.get("offers")
         for t in d:
             by[int(t["id"])] = t
-    return by
+    off = offline_ids() & set(by)
+    if off:
+        print("offline in the GYG catalogue, dropped:", sorted(off))
+    return {i: t for i, t in by.items() if i not in off}
 
 
 def rating(t):
@@ -207,10 +231,6 @@ def towns(t):
     pre = title_prefix_town(t)
     if pre == "far":
         return []
-    if pre:
-        return [pre]
-    # pickup / meeting text next; itinerary only its pickup/start entries
-    pk = " ".join(f(t, k) for k in ("meetingPoint", "meetingPointAddress", "meetingPoints"))
     # the meeting fields are often empty while the abstract opens with "Meet at the Portimão pier"
     # (t396968, 13,888 reviews, shipped with no town - audit 2026-09-13): read only meet/depart clauses
     ab = re.sub(r"<[^>]+>", " ", f(t, "description") or f(t, "abstract"))[:500]   # the v10 JSON keeps the text in "description"; "abstract" is None
@@ -222,6 +242,10 @@ def towns(t):
         if hits:
             clause_town = min(hits)[1]
             break
+    if pre:
+        return [clause_town] if clause_town in LAUNCH_BEACHES else [pre]
+    # pickup / meeting text next; itinerary only its pickup/start entries
+    pk = " ".join(f(t, k) for k in ("meetingPoint", "meetingPointAddress", "meetingPoints"))
     it = t.get("itinerary") or []
     if isinstance(it, list):
         for step in it:
@@ -272,7 +296,7 @@ def what(t):
         cap = re.search(r"up to (\d+)", t.get("priceCategory") or "")
         return ("Private charter for up to %s" % cap.group(1) if cap else "Private charter for your group") + \
                (", from " + " / ".join(TOWN_LABEL[x] for x in tw[:2]) if tw else "")
-    parts.append({"kayak": "Guided kayak/SUP into the cave", "cat": "Catamaran, views the cave from the entrance", "boat": "Boat, enters the cave sea permitting"}[c])
+    parts.append({"kayak": "Guided SUP into the cave" if is_sup(t) else "Guided kayak/SUP into the cave","cat": "Catamaran, views the cave from the entrance", "boat": "Boat, enters the cave sea permitting"}[c])
     if tw:
         parts.append("from " + " / ".join(TOWN_LABEL[x] for x in tw[:2]))
     if DOLPH.search(f(t, "title")):
@@ -341,7 +365,7 @@ def card(t, rank):
         '      <li class="ec-tour-item">\n'
         '        <a class="vlink ec-tour" data-vurl="%s" role="link" rel="sponsored nofollow noopener" tabindex="0" aria-label="%s on GetYourGuide">\n'
         '          <span class="ec-rank">%d</span>\n'
-        '          <img class="ec-thumb" src="%s" alt="" loading="lazy" width="92" height="92">\n'
+        '          <img class="ec-thumb" src="%s" alt="%s" loading="lazy" width="92" height="92">\n'
         '          <span class="ec-body">\n'
         '            <span class="ec-title">%s</span>\n'
         '            <span class="ec-what">%s</span>\n'
@@ -350,7 +374,7 @@ def card(t, rank):
         '          <span class="ec-cta">Check availability &#8594;</span>\n'
         '        </a>\n'
         '      </li>'
-    ) % (b64(aff_url(t)), e(clean_title(t)), rank, e(thumb(t)), e(clean_title(t)), e(what(t)), "\n              ".join(meta))
+    ) % (b64(aff_url(t)), e(clean_title(t)), rank, e(thumb(t)), e("Photo from the GetYourGuide listing: " + clean_title(t)), e(clean_title(t)), e(what(t)), "\n              ".join(meta))
 
 
 SUP = re.compile(r"\bsup\b|paddle ?board|stand[- ]up", re.I)
@@ -358,7 +382,11 @@ SPEED = re.compile(r"speed ?boat|\brib\b|fast boat|semi-rigid|zodiac", re.I)
 
 
 def is_sup(t):
-    return bool(SUP.search(f(t, "title")))
+    # the slug and the kit count too: t420262 is titled "Kayak Tour" but its slug is
+    # "sunrise-standup-paddleboarding" and it includes "Board, paddle" (audit 2026-10-04, inbox -024)
+    inc = f(t, "includes")
+    return bool(SUP.search(f(t, "title")) or SUP.search(bare_url(t).replace("-", " "))
+                or (re.search(r"\bboard,? (and )?paddle", inc, re.I) and not re.search(r"kayak", inc, re.I)))
 
 
 def is_private(t):
