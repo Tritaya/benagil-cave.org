@@ -50,12 +50,18 @@ TOWNS = {
     # a cove 2 km west of Benagil, not a town: t420262 is titled "Carvoeiro:" but meets "in the parking
     # of carvalho beach" and filed as the Carvoeiro page's top card (audit 2026-10-04, inbox -024)
     "carvalho": re.compile(r"carvalho", re.I),
+    # a launch BEACH or pier named in the listing's meeting point (11 Nov 2026 read): Capitao Nemo meets at Parchal on the
+    # Arade, not in Portimao; Algarviews meets on Albandeira Beach, not Benagil beach
+    "parchal": re.compile(r"parchal", re.I),
+    "albandeira": re.compile(r"albandeira beach|praia da albandeira", re.I),
 }
+SAME_SLOT = {"portimao": {"portimao", "parchal"}}   # the Portimao page still lists the Parchal boats; each card says where it meets
 TOWN_LABEL = {"benagil": "Benagil beach", "carvoeiro": "Carvoeiro", "armacao": "Armação de Pêra", "portimao": "Portimão",
-              "albufeira": "Albufeira", "lagos": "Lagos", "vilamoura": "Vilamoura", "carvalho": "Praia do Carvalho"}
+              "albufeira": "Albufeira", "lagos": "Lagos", "vilamoura": "Vilamoura", "carvalho": "Praia do Carvalho",
+              "parchal": "Parchal", "albandeira": "Albandeira Beach"}
 # a launch BEACH named in the meeting clause beats the town in the title prefix (the title names the
 # nearest resort, the description names where you actually get in the water)
-LAUNCH_BEACHES = ("carvalho",)
+LAUNCH_BEACHES = ("carvalho", "parchal", "albandeira")
 
 # editorial operator profiles on operators.html -> provider-name patterns for inline GYG links
 OPLINKS = {
@@ -107,6 +113,14 @@ SITE_HERO = {"index": "benagil-cave.webp", "operators": "benagil-cave-tour-opera
              "benagil-boat-tour": "benagil-boat-tour.webp", "benagil-cave-kayak": "benagil-cave-kayak-tour.webp"}
 
 
+READS_FILE = os.path.join(HERE, "listing_reads.json")
+READS = json.load(io.open(READS_FILE, encoding="utf-8"))["listings"] if os.path.exists(READS_FILE) else {}
+
+
+def read(t):
+    return READS.get(str(t.get("id")), {})
+
+
 def f(t, k):
     v = t.get(k)
     if isinstance(v, list):
@@ -140,6 +154,15 @@ def load():
             # override the 11 Nov shelf for the tours both hold)
             if i not in by or (t.get("scrapedAt") or "") >= (by[i].get("scrapedAt") or ""):
                 by[i] = t
+    # a live read of the listing page (listing_reads.json) beats a scrape that differs: the From price on the page is the reference
+    for i, t in by.items():
+        r = READS.get(str(i), {})
+        if r.get("from") and abs(float(t.get("startingPrice") or 0) - r["from"]) > 0.6:
+            t["startingPrice"] = float(r["from"])
+            t["formattedStartingPrice"] = "$%d" % r["from"]
+            if r.get("struck"):
+                t["basePrice"] = float(r["struck"])
+            t["scrapedAt"] = "2026-11-11T13:00:00"
     off = offline_ids() & set(by)
     if off:
         print("offline in the GYG catalogue, dropped:", sorted(off))
@@ -176,6 +199,7 @@ def clean_title(t):
     s = t.get("title") or ""
     s = re.sub(r"\s*[-–]\s*20\d\d\s*\(Verified Reviews\)\s*$", "", s)
     s = re.sub(r"\s*[-–]\s*From \$\d+\s*$", "", s)
+    s = re.sub(r"^\s*Top Rated\s+", "", s, flags=re.I)   # an operator's own title prefix reads as a selection label
     return s.strip()
 
 
@@ -215,10 +239,27 @@ def boat_access(t):
     return None
 
 
+ROAD = re.compile(r"\bvan\b|minibus|mini-bus|\bcoach\b|\bbus\b", re.I)
+
+
+def by_road(t):
+    """A local day trip that moves you by road and includes no boat or paddle: t526941 'Benagil, Algar Seco, Marinha, and 7 Valleys'
+    (includes 'transportation by van', excludes 'Boat trip', 'views of Benagil Cave from above') was carded as 'Boat, enters the
+    cave'. Rule: the listing transports you by road and no include line names a boat, paddle or catamaran."""
+    inc = [str(x) for x in t.get("includes") or []]
+    if not any(ROAD.search(x) for x in inc):
+        return False
+    return not any(BOATWORD.search(x) for x in inc)
+
+
 def craft(t):
     title = f(t, "title")
     if boat_access(t) in ("none", "optional", "ticket", "partial"):
         return "land"
+    if not far_origin(t) and by_road(t):
+        return "land"
+    if read(t).get("options"):
+        return "opt"
     if KAYAK.search(title):
         return "kayak"
     if CAT.search(title) or re.search(r"catamaran", f(t, "description")[:400], re.I):   # "sail along the coast" in a small boat's blurb is not a catamaran
@@ -232,7 +273,7 @@ def craft(t):
 
 
 FAR_ORIGIN = re.compile(r"lisbon|lisboa|sevill|faro\b|olh[aã]o|tavira|quarteira|vilamoura|sintra|porto\b", re.I)
-NOT_CAVE_TRIP = re.compile(r"\bhik|walk|trek|e-?bike|bike|jeep|safari|buggy|quad|tuk|segway|charter|yacht|4x4|castle|silves|monchique|winery|vineyard|city tour", re.I)
+NOT_CAVE_TRIP = re.compile(r"\bhik|\btrail\b|walk|trek|e-?bike|bike|jeep|safari|buggy|quad|tuk|segway|charter|yacht|4x4|castle|silves|monchique|winery|vineyard|city tour", re.I)
 
 
 def title_prefix_town(t):
@@ -248,6 +289,10 @@ def title_prefix_town(t):
 
 
 def towns(t):
+    meet = read(t).get("meeting") or ""
+    for k in LAUNCH_BEACHES:
+        if meet and TOWNS[k].search(meet):
+            return [k]
     pre = title_prefix_town(t)
     if pre == "far":
         return []
@@ -299,6 +344,38 @@ def base_true(t):
         and not far_origin(t) and cave_trip(t)
 
 
+ENTER_RE = re.compile(r"(?i)\b(enter|enters|entering)\b[^.\n]{0,60}\b(cave|caves|algar|benagil)|\b(go|goes|head|journey|venture|take you)\b[^.\n]{0,25}\b(inside|into)\b[^.\n]{0,30}\b(cave|caves|algar|benagil)|\binside (the |these )?(famous |hidden |iconic |benagil )*(sea )?(cave|caves)")
+LIGHT_RE = re.compile(r"(?i)light[^.\n]{0,25}\benter")
+
+
+def entry(t):
+    """What the LISTING says about going into the cave: ('yes'|'view'|'unstated', tied-to-the-sea?). The label on a card comes from
+    these words and nowhere else: a craft class (catamaran, small boat) says nothing about entry (t400618 and t394012 are
+    catamarans whose listings say they enter; t610061, t1422696 and the Albufeira boats say nothing). A hand-checked live read
+    (listing_reads.json) wins; for a listing not yet read, only an explicit sentence in the scraped text counts, else 'unstated'."""
+    r = read(t)
+    if r.get("enter"):
+        return r["enter"], bool(r.get("cond"))
+    txt = LIGHT_RE.sub("", " ".join(f(t, k) for k in ("title", "highlights", "includes", "description", "goodToKnow")))
+    if ENTER_RE.search(txt):
+        return "yes", bool(re.search(r"(?i)(enter|entry|entering)[^.]{0,100}(sea|weather|condition|safe|authorit)|(sea|weather|condition|safe)[^.]{0,100}(enter|entry)", txt))
+    return "unstated", False
+
+
+def craft_label(t, c):
+    e, cond = entry(t)
+    if c == "kayak":
+        base = "Guided SUP tour" if is_sup(t) else "Guided kayak tour"
+        return base + (" into the caves" if e == "yes" else "")
+    opt = read(t).get("options")
+    base = opt or {"cat": "Catamaran", "boat": "Boat"}[c if c != "opt" else "boat"]
+    if e == "yes":
+        return base + ", enters the cave" + (" sea permitting" if cond else "")
+    if e == "view":
+        return base + ", views the caves from the boat; entering depends on sea and approval"
+    return base + "; cave entry not stated in the listing"
+
+
 def what(t):
     c = craft(t)
     ba = boat_access(t)
@@ -310,13 +387,15 @@ def what(t):
                 "included": "Day trip by road + %s to the cave, sea permitting" % ("guided kayak" if c == "kayak" else "boat")}[ba]
     tw = towns(t)
     parts = []
+    if c == "land":   # a local trip by road (see by_road): the listing sends you to the cave by van and shows it from above
+        return "Day trip by road" + (" from " + TOWN_LABEL[tw[0]] if tw else "") + "; Benagil Cave seen from above, no boat"
     if is_private(t) and not far_origin(t):
         # a hull hired for your group: "yacht" matches the catamaran pattern, and the listings do not
         # say whether a charter goes in or holds at the arch (2026-10-04). Capacity from GYG's own unit.
         cap = re.search(r"up to (\d+)", t.get("priceCategory") or "")
         return ("Private charter for up to %s" % cap.group(1) if cap else "Private charter for your group") + \
                (", from " + " / ".join(TOWN_LABEL[x] for x in tw[:2]) if tw else "")
-    parts.append({"kayak": "Guided SUP into the cave" if is_sup(t) else "Guided kayak/SUP into the cave","cat": "Catamaran, views the cave from the entrance", "boat": "Boat, enters the cave sea permitting"}[c])
+    parts.append(craft_label(t, c))
     if tw:
         parts.append("from " + " / ".join(TOWN_LABEL[x] for x in tw[:2]))
     if DOLPH.search(f(t, "title")):
@@ -355,12 +434,9 @@ def og_image(t):
 
 
 def badge(t):
-    for b in t.get("badges") or []:
-        b = str(b)
-        # GetYourGuide's own "Top pick" badge reads as OUR pick next to a pinned calendar; dropped (audit 2026-09-13)
-        if b.startswith("#1 selling") or b in ("Top rated", "Likely to sell out", "Certified by GetYourGuide", "Official ticket"):
-            return b
-    return t.get("bookedRecentlyText") or ""
+    """No GetYourGuide label is ever printed (owner rules 2026-11-05 / 11-07): not "Certified by GetYourGuide", "#1 selling", "Top rated",
+    "Likely to sell out", "Official ticket", nor the 'booked recently' counter. The only chip is our own review-count floor (see card())."""
+    return ""
 
 
 def card(t, rank):
@@ -370,7 +446,7 @@ def card(t, rank):
     if price(t):
         meta.append('<span class="ec-price">from %s</span>' % e(price(t)))
     if not (is_private(t) and not far_origin(t)):   # a charter's chip is "Private, priced per boat" alone
-        meta.append('<span class="ec-reach ec-reach-%s">%s</span>' % ("boat" if c == "land" else c, {"kayak": "Kayak / SUP", "cat": "Catamaran", "boat": "Boat", "land": {"none": "Clifftop, no boat", "ticket": "Boat ticket extra", "partial": "Boat on one option"}.get(boat_access(t), "Boat optional")}[c]))
+        meta.append('<span class="ec-reach ec-reach-%s">%s</span>' % ("boat" if c == "land" else ("cat" if c == "opt" else c), {"kayak": "Kayak / SUP", "cat": "Catamaran", "opt": "Catamaran or RIB", "boat": "Boat", "land": {"none": "Clifftop, no boat", "ticket": "Boat ticket extra", "partial": "Boat on one option", None: "By road, no boat"}.get(boat_access(t), "Boat optional")}[c]))
     if is_private(t):
         meta.append('<span class="ec-reach ec-reach-cat">Private, priced per boat</span>')
     # 2,000+ reviews is the more useful chip than any platform badge ("Certified by GetYourGuide"
@@ -560,7 +636,7 @@ def main():
     # catamarans and dolphin combos by what they ARE, not by where they leave from: the old town rule
     # filed the Portimão speedboat t397931 under "catamarans" (audit 2026-09-13)
     catd = lambda t: craft(t) != "kayak" and not is_speed(t) and (craft(t) == "cat" or DOLPH.search(f(t, "title")) is not None)
-    town_sel = lambda tw: (lambda t: tw in towns(t))   # any craft that departs there
+    town_sel = lambda tw: (lambda t: bool(set(towns(t)) & SAME_SLOT.get(tw, {tw})))   # any craft that departs there
 
     def town_slot(tw, fallback):
         """A town's own departures; if the page would be thin (<4 cards after the hero), fill with
@@ -599,7 +675,7 @@ def main():
         "dolphin-portimao": ranked(pool, lambda t: craft(t) != "kayak" and DOLPH.search(f(t, "title")) is not None and "portimao" in towns(t), CARD_MIN_REVIEWS),
         "dolphin-other": ranked(pool, lambda t: craft(t) != "kayak" and DOLPH.search(f(t, "title")) is not None and not ({"albufeira", "lagos", "portimao"} & set(towns(t))), CARD_MIN_REVIEWS),
         # boats that name Praia da Marinha, Algar Seco or the Carvoeiro caves in the title or route
-        "marinha": ranked(pool, lambda t: craft(t) != "kayak" and MARINHA.search(f(t, "title") + " " + f(t, "itinerary")) is not None, CARD_MIN_REVIEWS),
+        "marinha": ranked(pool, lambda t: craft(t) in ("boat", "cat", "opt") and MARINHA.search(f(t, "title") + " " + f(t, "itinerary")) is not None, CARD_MIN_REVIEWS),
         # guided paddles that name Praia da Marinha (the classic kayak route from Benagil beach)
         "marinha-kayak": ranked(pool, lambda t: craft(t) == "kayak" and re.search(r"marinha", f(t, "title") + " " + f(t, "includes") + " " + f(t, "description")[:600], re.I) is not None, CARD_MIN_REVIEWS),
     }
@@ -691,7 +767,31 @@ def main():
             st[k] = st.get(k, 0) + 1
         st["min_price_none"] = min((price_num(pool_all[i]) for i in shown if boat_access(pool_all[i]) == "none"), default=0)
         st["min_price"] = min(price_num(pool_all[i]) for i in shown)
+        none_ids = [i for i in shown if boat_access(pool_all[i]) == "none"]
+        st["max_reviews_none"] = max((reviews(pool_all[i]) for i in none_ids), default=0)
+        st["explicit_none"] = sum(1 for i in none_ids if re.search(r"not a boat tour|land-based tour|without entering it by boat|no boat trip", f(pool_all[i], "goodToKnow") + " " + f(pool_all[i], "description"), re.I))
+        st["water"] = [{"id": i, "craft": craft(pool_all[i])} for i in shown if boat_access(pool_all[i]) in ("included", "partial")]
+        st["ticket_titles"] = [clean_title(pool_all[i]) for i in shown if boat_access(pool_all[i]) == "ticket"]
+        st["optional"] = sum(1 for i in shown if boat_access(pool_all[i]) == "optional")
+        st["included_ids"] = [i for i in shown if boat_access(pool_all[i]) == "included"]
         out["far_stats"][slug] = st
+    # facts the page generators print: computed here from the cards, never typed
+    out["most_reviewed_id"] = max(pool, key=lambda i: reviews(pool[i]))
+    out["entry_stats"] = {}
+    for slug in list(TOWN_OF_SLUG) + ["benagil-caves-and-dolphins"]:
+        slot = slug if slug in SLOTS else "dolphin"
+        _, used = cards_html(pool_all, SLOTS[slot], exclude=HEROES[slug])
+        shown = [HEROES[slug]] + used
+        es = {"shown": len(shown), "yes": 0, "unstated": 0, "view": 0}
+        for i in shown:
+            es[entry(pool_all[i])[0]] += 1
+        out["entry_stats"][slug] = es
+    dl = set()
+    for s_ in ("dolphin-albufeira", "dolphin-lagos", "dolphin-portimao", "dolphin-other"):
+        dl.update(cards_html(pool_all, SLOTS[s_], exclude=HEROES["benagil-caves-and-dolphins"])[1])
+    dl.add(HEROES["benagil-caves-and-dolphins"])
+    hrs = sorted(read(pool_all[i])["hours"] for i in dl if read(pool_all[i]).get("hours"))
+    out["dolphin_dur"] = {"n": len(hrs), "n25": sum(1 for h in hrs if abs(h - 2.5) < 0.01), "min": hrs[0] if hrs else None, "max": hrs[-1] if hrs else None}
     h, ids = mostbooked("benagil-cave-kayak", SLOTS["kayak"], "kayak-only")
     out["mostbooked"]["benagil-cave-kayak"] = {"html": h, "ids": ids}
     # private charters row for the boat page: never a product the page already shows

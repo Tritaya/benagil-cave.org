@@ -1,42 +1,42 @@
 {
- "benagil-caves-and-dolphins": {
-  "page": "/benagil-caves-and-dolphins",
-  "slot": "hero (under the byline); also the page's og:image",
-  "kind": "illustration",
-  "file": "img/benagil-caves-and-dolphins.webp",
-  "size": "1200x630",
-  "alt": "Illustration of common dolphins surfacing beside a white tour boat off golden limestone cliffs on the Algarve coast",
-  "caption": "Illustration. The dolphin search happens in open water; the cave coast is the other half of the trip.",
-  "prompt": "Editorial illustration in a soft painterly documentary style: three common dolphins arching out of deep blue Atlantic water in the foreground, a white open tour boat with a few small distant passengers in life jackets behind them, golden Miocene limestone cliffs with sea caves along the horizon, late-morning light. Calm, natural, no exaggeration. No text, no signage, no logos, no flags, no faces in close-up. Wide 16:9 composition with the dolphins left of centre."
- },
- "praia-da-marinha-carvoeiro-caves": {
-  "page": "/praia-da-marinha-carvoeiro-caves",
-  "slot": "hero (under the byline); also the page's og:image",
-  "kind": "illustration",
-  "file": "img/praia-da-marinha-carvoeiro-caves.webp",
-  "size": "1200x630",
-  "alt": "Illustration of the limestone arches and sea stacks of Praia da Marinha seen from a small boat on turquoise water",
-  "caption": "Illustration. Praia da Marinha from the water: arches, coves and islets cut into the limestone.",
-  "prompt": "Editorial illustration in a soft painterly documentary style: the view from the bow of a small open boat towards a golden limestone coast with natural rock arches, sea stacks and a small sandy cove, turquoise and deep blue water, late-morning Algarve light, a few tiny distant figures on the sand. No text, no signage, no logos, no flags, no faces. Wide 16:9."
- },
- "benagil-cave-rules": {
-  "page": "/benagil-cave-rules",
-  "slot": "hero (under the byline); also the page's og:image",
-  "kind": "illustration",
-  "file": "img/benagil-cave-rules.webp",
-  "size": "1200x630",
-  "alt": "Illustration of a guided group of kayakers in life jackets paddling in single file towards the eastern entrance of Benagil Cave while a small boat waits outside the western entrance",
-  "caption": "Illustration. Two ways in: boats by the western entrance for two minutes, guided paddlers by the eastern entrance for up to eight.",
-  "prompt": "Editorial illustration in a soft painterly documentary style: the sea entrances of a large limestone sea cave with a round skylight in its domed roof, a guided group of six sit-on-top kayaks in single file with a guide kayak in front heading into the right-hand entrance, everyone in orange life jackets, a small open motorboat waiting its turn outside the left-hand entrance, calm turquoise water, nobody on the sand inside the cave, nobody swimming. No text, no signage, no logos, no flags, no faces in close-up. Wide 16:9."
- },
- "benagil-cave-kayak-rental": {
-  "page": "/benagil-cave-kayak",
-  "slot": "section 'Benagil kayak rental: what you can and cannot hire', after the first paragraph",
-  "kind": "illustration",
-  "file": "img/benagil-cave-kayak-rental.webp",
-  "size": "1200x675",
-  "alt": "Illustration of a guide briefing a small group beside double kayaks on Benagil beach before a guided paddle",
-  "caption": "Illustration. A Benagil “rental” today starts with a guide and a briefing on the beach.",
-  "prompt": "Editorial illustration in a soft painterly documentary style: a small sandy beach in a narrow gully between golden limestone cliffs, a guide in a cap talking to a small group in life jackets standing beside four bright double sit-on-top kayaks at the waterline, a few fishing boats pulled up on the sand, calm early-morning light. No text, no signage, no logos, no flags, no faces in close-up. Wide 16:9."
- }
+  "benagil-caves-and-dolphins": {
+    "page": "/benagil-caves-and-dolphins",
+    "slot": "hero (under the byline); also the page's og:image",
+    "kind": "illustration",
+    "file": "img/benagil-caves-and-dolphins.webp",
+    "size": "1200x630",
+    "alt": "Illustration of three dolphins leaping out of the sea near a white tour boat, in front of golden limestone cliffs with sea caves",
+    "caption": "Illustration. Dolphins leaping near a tour boat off golden cliffs; the dolphin search happens in open water, and the cave coast is the other half of the trip.",
+    "prompt": "Editorial illustration in a soft painterly documentary style: three common dolphins arching out of deep blue Atlantic water in the foreground, a white open tour boat with a few small distant passengers in life jackets behind them, golden Miocene limestone cliffs with sea caves along the horizon, late-morning light. Calm, natural, no exaggeration. No text, no signage, no logos, no flags, no faces in close-up. Wide 16:9 composition with the dolphins left of centre. Absolutely no text, no letters, no watermark, no logo, no labels anywhere in the image."
+  },
+  "praia-da-marinha-carvoeiro-caves": {
+    "page": "/praia-da-marinha-carvoeiro-caves",
+    "slot": "hero (under the byline); also the page's og:image",
+    "kind": "illustration",
+    "file": "img/praia-da-marinha-carvoeiro-caves.webp",
+    "size": "1200x630",
+    "alt": "Illustration of limestone arches, a sea stack and a sandy cove seen from the bow of a small boat on turquoise water",
+    "caption": "Illustration. Limestone arches and a sea stack along this stretch of coast, seen from a boat's bow.",
+    "prompt": "Editorial illustration in a soft painterly documentary style: the view from the bow of a small open boat towards a golden limestone coast with natural rock arches, sea stacks and a small sandy cove, turquoise and deep blue water, late-morning Algarve light, a few tiny distant figures on the sand. No text, no signage, no logos, no flags, no faces. Wide 16:9."
+  },
+  "benagil-cave-rules": {
+    "page": "/benagil-cave-rules",
+    "slot": "hero (under the byline); also the page's og:image",
+    "kind": "illustration",
+    "file": "img/benagil-cave-rules.webp",
+    "size": "1200x630",
+    "alt": "Illustration of a guided group of six kayakers in life jackets and helmets inside a sea cave with a skylight, with a small boat waiting outside one of the arches",
+    "caption": "Illustration. A guided group of six kayakers in life jackets and helmets inside the cave, a boat waiting outside. The rules set a guided group at six craft with one guide.",
+    "prompt": "Editorial illustration in a soft painterly documentary style: the sea entrances of a large limestone sea cave with a round skylight in its domed roof, a guided group of six sit-on-top kayaks in single file with a guide kayak in front heading into the right-hand entrance, everyone in orange life jackets, a small open motorboat waiting its turn outside the left-hand entrance, calm turquoise water, nobody on the sand inside the cave, nobody swimming. No text, no signage, no logos, no flags, no faces in close-up. Wide 16:9. Every kayaker wears a bright life jacket AND a hard-shell paddling helmet (helmets clearly visible); the group follows a guide; nobody stands or sits on the sand inside the cave."
+  },
+  "benagil-cave-kayak-rental": {
+    "page": "/benagil-cave-kayak",
+    "slot": "section 'Benagil kayak rental: what you can and cannot hire', after the first paragraph",
+    "kind": "illustration",
+    "file": "img/benagil-cave-kayak-rental.webp",
+    "size": "1200x675",
+    "alt": "Illustration of a guide briefing a small group in life jackets beside kayaks on a beach below golden cliffs",
+    "caption": "Illustration. A guide briefing a group beside the kayaks on a beach before a guided paddle.",
+    "prompt": "Editorial illustration in a soft painterly documentary style: a small sandy beach in a narrow gully between golden limestone cliffs, a guide in a cap talking to a small group in life jackets standing beside four bright double sit-on-top kayaks at the waterline, a few fishing boats pulled up on the sand, calm early-morning light. No text, no signage, no logos, no flags, no faces in close-up. Wide 16:9."
+  }
 }

@@ -101,25 +101,27 @@ document.querySelectorAll(['.gem-card', '.season-item', '.op-entry'].join(',')).
   observer.observe(el);
 });
 
-// -- SEA CONDITIONS (Open-Meteo marine + forecast models at the cave) --------
+// -- SEA CONDITIONS (Open-Meteo marine model, open water off the cave) --------
 // The cave rules carry no wave-height limit: the skipper decides at the cave and the
-// Capitania closes the caves by notice to mariners. So the strip states the numbers and
-// ranks the current wave height against the last 30 days of hourly values at the same
-// grid point (lower third CALM, middle MODERATE, upper third ROUGH). It never says
-// "open" or "closed". Fetch failure leaves the static CHECK FIRST default in place.
-const LAT = 37.0868, LON = -8.4238;            // Algar de Benagil
+// Capitania closes the caves by notice to mariners. So the strip states the numbers (wave
+// height and period) and says where the current wave height sits among the last 30 days of
+// hourly values at the SAME grid point (lower, middle or upper third), printing the cut-offs.
+// It never says "open", "closed", "calm" or "rough", and the booking ask is always the calendar.
+// Why not the cave's own coordinates: the marine grid cell that contains the cave (centre
+// 37.125 N, 8.458 W, 35 m elevation) is land about 5 km inland and reads lower than the sea.
+// The nearest open-water cell is centred at 37.0417 N, 8.4583 W (about 6 km south-south-west).
+// Fetch failure leaves the static CHECK FIRST default in place.
+const LAT = 37.0868, LON = -8.4238;            // Algar de Benagil (wind and weather)
+const SEA_LAT = 37.0417, SEA_LON = -8.4583;    // open-water marine grid cell off the cave
 const weatherEl = document.getElementById('weatherWidget');
 const pill      = document.getElementById('conditionsPill');
 
 // The pill is the booking nudge once the reading is in: it lands on the page's own
-// pinned calendar (#availability). A ROUGH reading routes to the rules page section
-// that explains who closes the cave.
-let pillTarget = 'availability';
+// pinned calendar (#availability).
 if (pill) {
   const cond = pill.querySelector('.pill-conditions');
   if (cond) cond.addEventListener('click', () => {
-    if (pillTarget === 'rules') { window.location.href = '/benagil-cave-rules#weather'; return; }
-    const el = document.getElementById(pillTarget) || document.getElementById('availability');
+    const el = document.getElementById('availability');
     if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' });
     else window.location.href = '/#availability';
   });
@@ -134,21 +136,15 @@ function quantile(sorted, q) {
   const pos = (sorted.length - 1) * q, lo = Math.floor(pos), hi = Math.ceil(pos);
   return sorted[lo] + (sorted[hi] - sorted[lo]) * (pos - lo);
 }
-// state of a wave height against the 30-day cut points: 'calm' | 'moderate' | 'rough' | null
-function seaState(h, cuts) {
+// where a wave height sits against the 30-day cut points: 'lower' | 'middle' | 'upper' | null
+function thirdOf(h, cuts) {
   if (!cuts || h == null) return null;
-  return h <= cuts.p33 ? 'calm' : h <= cuts.p66 ? 'moderate' : 'rough';
+  return h <= cuts.p33 ? 'lower' : h <= cuts.p66 ? 'middle' : 'upper';
 }
-const STATE = {
-  calm:     { word: 'CALM',     dot: 'verdict-dot--go',      pill: 'go',
-              label: 'Calmer than most of the last 30 days here',
-              cta: 'Book a boat for a calm sea &rarr;', href: '#availability' },
-  moderate: { word: 'MODERATE', dot: 'verdict-dot--caution', pill: 'caution',
-              label: 'About the middle of the last 30 days here',
-              cta: 'Pick a date, cancel free &rarr;', href: '#availability' },
-  rough:    { word: 'ROUGH',    dot: 'verdict-dot--hold',    pill: 'hold',
-              label: 'Rougher than most of the last 30 days here',
-              cta: 'Who closes the cave? &rarr;', href: '/benagil-cave-rules#weather' },
+const THIRD = {
+  lower:  { word: 'LOWER THIRD',  sentence: 'in the lower third of the last 30 days' },
+  middle: { word: 'MIDDLE THIRD', sentence: 'in the middle third of the last 30 days' },
+  upper:  { word: 'UPPER THIRD',  sentence: 'in the upper third of the last 30 days' },
 };
 
 const WMO = {
@@ -159,7 +155,7 @@ const WMO = {
 };
 
 if (weatherEl || pill || document.getElementById('strip-verdict-word')) {
-  const marineURL = 'https://marine-api.open-meteo.com/v1/marine?latitude=' + LAT + '&longitude=' + LON +
+  const marineURL = 'https://marine-api.open-meteo.com/v1/marine?latitude=' + SEA_LAT + '&longitude=' + SEA_LON +
     '&current=wave_height,wave_period,wave_direction,sea_surface_temperature' +
     '&hourly=wave_height&past_days=30&forecast_days=1&timezone=Europe%2FLisbon';
   const airURL = 'https://api.open-meteo.com/v1/forecast?latitude=' + LAT + '&longitude=' + LON +
@@ -193,8 +189,9 @@ if (weatherEl || pill || document.getElementById('strip-verdict-word')) {
         if (iNow < 0) iNow = times.length;
         const past = hw.slice(0, iNow).filter(v => typeof v === 'number').sort((x, y) => x - y);
         const cuts = past.length >= 200 ? { p33: quantile(past, 1 / 3), p66: quantile(past, 2 / 3) } : null;
-        const st = seaState(waveH, cuts);
-        const S = st ? STATE[st] : null;
+        const th = thirdOf(waveH, cuts);
+        const T = th ? THIRD[th] : null;
+        const cutText = cuts ? 'lower third up to ' + cuts.p33.toFixed(1) + ' m, middle third ' + cuts.p33.toFixed(1) + ' to ' + cuts.p66.toFixed(1) + ' m, upper third above ' + cuts.p66.toFixed(1) + ' m' : '';
 
         // -- the home page strip
         const stripWord = document.getElementById('strip-verdict-word');
@@ -202,14 +199,12 @@ if (weatherEl || pill || document.getElementById('strip-verdict-word')) {
           const sw = document.getElementById('strip-wave');   if (sw) sw.textContent = waveH.toFixed(1) + ' m';
           const sp = document.getElementById('strip-period'); if (sp) sp.textContent = period != null ? period + ' s' : '-';
           const sd = document.getElementById('strip-wind');   if (sd) sd.innerHTML = wind != null ? wind + ' km/h' + (wdir ? ' ' + wdir : '') : '-';
-          if (S) {
-            stripWord.innerHTML = '<span class="verdict-dot ' + S.dot + '"></span> ' + S.word;
-            const wl = document.getElementById('strip-verdict-label'); if (wl) wl.innerHTML = S.label;
-            const cta = document.getElementById('verdict-cta');
-            if (cta) { cta.innerHTML = S.cta; cta.setAttribute('href', S.href); }
+          if (T) {
+            stripWord.textContent = T.word;
+            const wl = document.getElementById('strip-verdict-label'); if (wl) wl.textContent = 'Wave height now, ranked against the last 30 days at this point';
           }
           const hon = document.getElementById('strip-honest');
-          if (hon && cuts) hon.innerHTML = 'Hourly model at the cave, ranked against its last 30 days (calm up to ' + cuts.p33.toFixed(1) + ' m, rough above ' + cuts.p66.toFixed(1) + ' m)';
+          if (hon && cuts) hon.innerHTML = 'Open-water marine model cell at 37.04&deg; N, 8.46&deg; W, about 6 km south-south-west of the cave: ' + cutText + ' (last 30 days of hourly values)';
           const tm = document.getElementById('verdict-time'), live = document.getElementById('verdict-live');
           if (tm && live) { tm.textContent = now; live.hidden = false; }
         }
@@ -218,7 +213,7 @@ if (weatherEl || pill || document.getElementById('strip-verdict-word')) {
         if (weatherEl) {
           const stats = [];
           if (period != null) stats.push([period + ' s', 'Wave period']);
-          if (wind != null)   stats.push([wind + ' km/h' + (wdir ? ' ' + wdir : ''), 'Wind']);
+          if (wind != null)   stats.push([wind + ' km/h' + (wdir ? ' ' + wdir : ''), 'Wind at the cave']);
           if (gust != null)   stats.push([gust + ' km/h', 'Gusts']);
           if (seaT != null)   stats.push([seaT + '&deg;C', 'Sea']);
           if (airC != null)   stats.push([airC + '&deg;C', 'Air']);
@@ -232,8 +227,7 @@ if (weatherEl || pill || document.getElementById('strip-verdict-word')) {
           const maxW = Math.max(...hours.map(h => h.h), 1);
           const bars = hours.map((h, i) => {
             const pct = Math.max(6, Math.round((h.h / maxW) * 100));
-            const cls = (STATE[seaState(h.h, cuts)] || {}).pill || 'caution';
-            return '<div class="wind-hour"><div class="wind-bar-wrap"><div class="wind-bar ' + cls + '" style="height:' + pct + '%"></div></div>' +
+            return '<div class="wind-hour"><div class="wind-bar-wrap"><div class="wind-bar neutral" style="height:' + pct + '%"></div></div>' +
               '<span class="wind-hour-val">' + h.h.toFixed(1) + '</span><span class="wind-hour-time">' + (i === 0 ? 'Now' : h.t + 'h') + '</span></div>';
           }).join('');
           weatherEl.classList.add('loaded');
@@ -243,20 +237,19 @@ if (weatherEl || pill || document.getElementById('strip-verdict-word')) {
             '<div class="weather-body"><div class="weather-main">' +
               '<span class="weather-temp">' + waveH.toFixed(1) + ' m <span class="weather-temp-c">waves from the ' + dir + '</span></span>' +
               (desc ? '<span class="weather-desc">' + desc + '</span>' : '') +
-              (S ? '<span class="weather-verdict verdict-' + S.pill + '">' + S.word + ': ' + S.label + '</span>' : '') +
+              (T ? '<span class="weather-verdict verdict-neutral">' + T.sentence + '</span>' : '') +
             '</div><div><div class="weather-stats">' + statsHtml + '</div>' +
             (bars ? '<p class="wind-hours-label">Wave height, next hours (m)</p><div class="wind-hours">' + bars + '</div>' : '') +
             '</div></div>' +
             '<div class="sea-note">No wave height is written into the cave rules. The skipper or guide decides at the cave, and the Capitania do Porto de Portim&atilde;o closes the caves by a notice to mariners when the sea does not allow visits. ' +
-            'The bands compare today with the last 30 days at this spot; they are not an operator&rsquo;s cut-off.</div>';
+            'Wave figures are the Open-Meteo marine model for open water about 6 km south-south-west of the cave' + (cutText ? ' (' + cutText + ', last 30 days)' : '') + '; they are not an operator&rsquo;s cut-off.</div>';
         }
 
-        if (pill && S) {
-          pill.querySelector('.pill-dot').className = 'pill-dot ' + S.pill;
+        if (pill) {
+          pill.querySelector('.pill-dot').className = 'pill-dot neutral';
           pill.querySelector('.pill-wind').textContent = waveH.toFixed(1) + ' m';
           const pc = pill.querySelector('.pill-cta');
-          if (pc) pc.innerHTML = st !== 'rough' ? '&middot; ' + (pill.dataset.cta || 'Book a boat') + ' &rarr;' : '&middot; Who closes the cave &rarr;';
-          pillTarget = st !== 'rough' ? 'availability' : 'rules';
+          if (pc) pc.innerHTML = '&middot; ' + (pill.dataset.cta || 'Book a boat') + ' &rarr;';
           pill.style.display = 'flex';
         }
       } catch (e) { /* keep the static default */ }

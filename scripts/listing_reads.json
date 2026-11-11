@@ -1,0 +1,471 @@
+{
+ "read_on": "2026-11-11",
+ "note": "Read from the public GetYourGuide listing pages (USD display) on 11 November 2026 by hand-checked extraction: from/struck = the price block, hours = the Duration line, meeting = the first meeting-point line, helmet = the helmet line of the kit lists, enter = what the listing text says about going into the cave (yes / view / unstated), cond = it ties that to sea, weather, safety or the authorities.",
+ "listings": {
+  "64461": {
+   "from": 38,
+   "struck": null,
+   "hours": 2.5,
+   "meeting": "Dream Wave | Marina de Albufeira Passeio dos Oceanos Lote 5 Loja 31, 8200-394 Albufeira, Portugal",
+   "enter": "yes",
+   "cond": true
+  },
+  "85428": {
+   "from": 50,
+   "struck": null,
+   "hours": 1.5,
+   "meeting": "Benagil Beach | CM1154, 8400 Lagoa, Portugal",
+   "enter": "unstated"
+  },
+  "100467": {
+   "from": 26,
+   "struck": 32,
+   "hours": 2.5,
+   "meeting": "AlgarExperience - Marina de Albufeira | Marina de Albufeira, Passeio dos Oceanos Lote 3 Loja 7, 8200-394 Albufeira, Portugal",
+   "enter": "yes",
+   "cond": true
+  },
+  "109039": {
+   "from": 31,
+   "struck": 39,
+   "hours": 2.5,
+   "meeting": "This activity has 2 meeting points. Your meeting point depends on the option you select. | Check availability",
+   "enter": "unstated"
+  },
+  "197581": {
+   "from": 335,
+   "struck": null,
+   "hours": 2.0,
+   "meeting": "Av. Cap. Fernandes Leão Pacheco, 8500-607 Portimão, Portugal | View details",
+   "enter": "yes",
+   "cond": false
+  },
+  "228733": {
+   "from": 47,
+   "struck": null,
+   "hours": 2.0,
+   "meeting": "Vilamoura Watersports Centre | Office 5, Cais Q, Marina de Vilamoura, 8125-409 Quarteira, Portugal",
+   "enter": "yes",
+   "cond": true
+  },
+  "263497": {
+   "from": 45,
+   "struck": null,
+   "hours": 1.5,
+   "meeting": "Kayak Algarve - Secret Algarve | Estr. de Benagil, Benagil, 8400-400 Carvoeiro, Portugal",
+   "enter": "yes",
+   "cond": false
+  },
+  "281617": {
+   "from": 22,
+   "struck": 32,
+   "hours": 2.0,
+   "meeting": "Benagil, 8400 Lagoa, Portugal | View details",
+   "helmet": "Helmet (not mandatory)",
+   "enter": "yes",
+   "cond": false
+  },
+  "296595": {
+   "from": 39,
+   "struck": null,
+   "hours": 2.5,
+   "meeting": "Algarve Charters | Cais H, Escritório 3, R. Marina de Albufeira, 8200-394 Albufeira, Portugal",
+   "enter": "yes",
+   "cond": true
+  },
+  "304398": {
+   "from": 51,
+   "struck": 62,
+   "hours": 5.0,
+   "meeting": "Av. da República 2, 8000-470 Faro, Portugal | View details",
+   "enter": "unstated"
+  },
+  "327856": {
+   "from": 33,
+   "struck": null,
+   "hours": 2.0,
+   "meeting": "Kayak & SUP Benagil | Estr. de Albandeira, Benagil, 8400-427 Lagoa, Portugal",
+   "enter": "unstated"
+  },
+  "330206": {
+   "from": 28,
+   "struck": null,
+   "hours": 1.0,
+   "meeting": "This activity has 3 meeting points. Your meeting point depends on the option you select. | Check availability",
+   "enter": "unstated"
+  },
+  "356815": {
+   "from": 17,
+   "struck": null,
+   "hours": 2.0,
+   "meeting": "Benagil, 8400 Lagoa, Portugal | View details",
+   "helmet": "Helmet (not mandatory)",
+   "enter": "yes",
+   "cond": false
+  },
+  "391058": {
+   "from": 51,
+   "struck": null,
+   "hours": 4.0,
+   "meeting": "Pier Vasco Da Gama | Rio Arade, 8500-702 Portimão, Portugal",
+   "enter": "unstated"
+  },
+  "392778": {
+   "from": 33,
+   "struck": null,
+   "hours": 2.0,
+   "meeting": "Ocean4fun - Benagil Boat & Kayak Tours | Marina de Portimão, Avenida Rio Arade, kiosk, nº 9, Ocean4fun, 8500-345 Portimão, Portugal",
+   "enter": "view",
+   "cond": true
+  },
+  "394012": {
+   "from": 33,
+   "struck": null,
+   "hours": 2.5,
+   "meeting": "SeaAlgarve Kayak&SUP And Boat Tours | Marina de Albufeira, Beco da Orada Apartado 2422, 8201-918 Albufeira, Portugal",
+   "enter": "yes",
+   "cond": true
+  },
+  "396968": {
+   "from": 14,
+   "struck": 28,
+   "hours": 1.5,
+   "meeting": "Atlantis Tours | Ac. Porto Comercial de Portimão, 8500-512 Portimão, Portugal",
+   "enter": "yes",
+   "cond": true
+  },
+  "397931": {
+   "from": 14,
+   "struck": 28,
+   "hours": 1.5,
+   "meeting": "Atlantis Tours | Ac. Porto Comercial de Portimão, 8500-512 Portimão, Portugal",
+   "enter": "yes",
+   "cond": true
+  },
+  "397978": {
+   "from": 38,
+   "struck": null,
+   "hours": 2.5,
+   "meeting": "Dream Wave | Marina de Albufeira Passeio dos Oceanos Lote 5 Loja 31, 8200-394 Albufeira, Portugal",
+   "enter": "yes",
+   "cond": true
+  },
+  "400618": {
+   "from": 36,
+   "struck": 48,
+   "hours": 3.0,
+   "meeting": "Algarve SunBoat | BENAGIL CAVE BOAT TOUR | SunCat Boarding Pier | Cais M, Zona Norte da Marina de Portimão Pier M, North Side Portimão Marina, R. Simão Correia, 8500-844 Portimão, Portugal",
+   "enter": "yes",
+   "cond": false
+  },
+  "402450": {
+   "from": 40,
+   "struck": 45,
+   "hours": 2.0,
+   "meeting": "Lagos Grotto Trips Meeting Point | Passeio dos Descobrimentos 10, 8600-315 Lagos, Portugal",
+   "enter": "unstated"
+  },
+  "402664": {
+   "from": 33,
+   "struck": null,
+   "hours": 2.0,
+   "meeting": "R. Marina de Albufeira 5B, 8200 Albufeira, Portugal | View details",
+   "enter": "unstated"
+  },
+  "402904": {
+   "from": 31,
+   "struck": 39,
+   "hours": 2.5,
+   "meeting": "Discover Tours by AlgarExperience - Lagos | Marina de Lagos, Loja 13, 8600-780 Lagos, Portugal",
+   "enter": "unstated"
+  },
+  "414078": {
+   "from": 31,
+   "struck": 39,
+   "hours": 2.0,
+   "meeting": "O Litoral | Estr. de Benagil, 8400-427 Lagoa, Portugal",
+   "enter": "yes",
+   "cond": false
+  },
+  "419728": {
+   "from": 30,
+   "struck": 39,
+   "hours": 2.5,
+   "meeting": "This activity has 2 meeting points. Your meeting point depends on the option you select. | Check availability",
+   "enter": "unstated",
+   "options": "Catamaran or semi-rigid boat, by option"
+  },
+  "420129": {
+   "from": 38,
+   "struck": null,
+   "hours": 2.5,
+   "meeting": "Av. Rio Arade 129, 8500-311 Portimão, Portugal | View details",
+   "enter": "yes",
+   "cond": true
+  },
+  "420800": {
+   "from": 36,
+   "struck": null,
+   "hours": 2.0,
+   "meeting": "Estr. da Rocha 150, 8500 Portimão, Portugal | View details",
+   "enter": "unstated"
+  },
+  "421643": {
+   "from": 47,
+   "struck": null,
+   "hours": 2.5,
+   "meeting": "Vilamoura Watersports Centre | Office 5, Cais Q, Marina de Vilamoura, 8125-409 Quarteira, Portugal",
+   "enter": "yes",
+   "cond": true
+  },
+  "421964": {
+   "from": 39,
+   "struck": null,
+   "hours": 1.5,
+   "meeting": "Carvoeiro Caves ® | Largo da Praia do, 8400-513 Carvoeiro, Portugal",
+   "enter": "yes",
+   "cond": true
+  },
+  "422442": {
+   "from": 45,
+   "struck": null,
+   "hours": 2.0,
+   "meeting": "Bom Dia Boat Trips | Marina de Lagos 10, 8600-315 Lagos, Portugal",
+   "helmet": "Helmet (if needed)",
+   "enter": "unstated"
+  },
+  "427019": {
+   "from": 39,
+   "struck": null,
+   "hours": 1.0,
+   "meeting": "Taruga Benagil Tours - Benagil | Benagil, 8400-401 Lagoa, Portugal",
+   "enter": "unstated"
+  },
+  "427635": {
+   "from": 22,
+   "struck": null,
+   "hours": 0.5,
+   "meeting": "Taruga Benagil Tours | Benagil, 8400-401 Lagoa, Portugal",
+   "enter": "unstated"
+  },
+  "444219": {
+   "from": 28,
+   "struck": null,
+   "hours": 1.0,
+   "meeting": "Sétima Onda Boat Trips | Praia dos Pescadores, 8365-114 Armação de Pêra, Portugal",
+   "enter": "unstated"
+  },
+  "444875": {
+   "from": 28,
+   "struck": 39,
+   "hours": 2.0,
+   "meeting": "O Litoral | Estr. de Benagil, 8400-427 Lagoa, Portugal",
+   "enter": "yes",
+   "cond": false
+  },
+  "445304": {
+   "from": 50,
+   "struck": null,
+   "hours": 2.0,
+   "meeting": "O Litoral | Estr. de Benagil, 8400-427 Lagoa, Portugal",
+   "enter": "unstated"
+  },
+  "446452": {
+   "from": 36,
+   "struck": 67,
+   "hours": 2.5,
+   "meeting": "SeaTrips - Dolphin Watching & Benagil Lagos Boat Tours | Marina de Lagos, loja 10, 8600-315 Lagos, Portugal",
+   "helmet": "Helmets, if necessary",
+   "enter": "yes",
+   "cond": true
+  },
+  "450041": {
+   "from": 26,
+   "struck": 32,
+   "hours": 2.5,
+   "meeting": "Discover Tours Portimão - Catamaran Cruises, Boat Cave Tours | Rotunda da Marina, 8500-311 Portimão, Portugal",
+   "enter": "unstated"
+  },
+  "455480": {
+   "from": 61,
+   "struck": null,
+   "hours": 7.0,
+   "meeting": "Largo de São Pedro 19, 8000-129 Faro, Portugal | View details",
+   "enter": "unstated"
+  },
+  "457596": {
+   "from": 61,
+   "struck": 67,
+   "hours": 8.0,
+   "meeting": "Av. da República 8, 8000-079 Faro, Portugal | View details",
+   "enter": "unstated"
+  },
+  "460534": {
+   "from": 69,
+   "struck": 77,
+   "hours": 3.0,
+   "meeting": "Capitão Nemo Algarve | Restaurante Vista Rio - Hotel Riverside, 8400 Parchal, Portugal",
+   "enter": "yes",
+   "cond": true
+  },
+  "467864": {
+   "from": 40,
+   "struck": 50,
+   "hours": 2.0,
+   "meeting": "Capitão Nemo Algarve | Restaurante Vista Rio - Hotel Riverside, 8400 Parchal, Portugal",
+   "enter": "yes",
+   "cond": false
+  },
+  "497613": {
+   "from": 39,
+   "struck": null,
+   "hours": 2.0,
+   "meeting": "Benagil eco tours (Kayak and Sup) | Benagil eco tours, 8400-450 Lagoa, Portugal",
+   "enter": "yes",
+   "cond": false
+  },
+  "526941": {
+   "from": 50,
+   "struck": null,
+   "hours": 5.0,
+   "meeting": "",
+   "enter": "unstated"
+  },
+  "600726": {
+   "from": 13,
+   "struck": 26,
+   "hours": 1.5,
+   "meeting": "Atlantis Tours | Ac. Porto Comercial de Portimão, 8500-512 Portimão, Portugal",
+   "enter": "yes",
+   "cond": true
+  },
+  "610061": {
+   "from": 63,
+   "struck": 78,
+   "hours": 3.0,
+   "meeting": "Alameda da Orada 4a, 8200-394 Albufeira, Portugal | View details",
+   "enter": "unstated"
+  },
+  "625908": {
+   "from": 201,
+   "struck": 251,
+   "hours": 12.0,
+   "meeting": "",
+   "enter": "unstated"
+  },
+  "648205": {
+   "from": 88,
+   "struck": null,
+   "hours": 12.0,
+   "meeting": "Please wait in front of HF Fenix Hotel for the pickup | Open in Google Maps",
+   "enter": "unstated"
+  },
+  "654398": {
+   "from": 179,
+   "struck": 218,
+   "hours": 12.0,
+   "meeting": "Please meet in front of Hard Rock Cafe Lisboa, Av. da Liberdade 2, 1250-144 Lisboa, Portugal. Our driver/guide will be holding a sign that says \"Lisbon Attractions Tours.\" | Open in Google Maps",
+   "enter": "unstated"
+  },
+  "655761": {
+   "from": 111,
+   "struck": 221,
+   "hours": 11.0,
+   "meeting": "Got it — your meeting point is: Hard Rock Cafe Lisbon. Av. da Liberdade 2, 1250-144 Lisboa, Portugal. Arrival tip: Be there 10 minutes early to avoid missing the tour — the guide won’t be able to wait for late arrivals due to the strict schedule. | Open in Google Maps",
+   "enter": "unstated"
+  },
+  "670049": {
+   "from": 56,
+   "struck": null,
+   "hours": 3.0,
+   "meeting": "Albandeira Beach, 8400 Porches, Portugal | View details",
+   "enter": "yes",
+   "cond": false
+  },
+  "675454": {
+   "from": 141,
+   "struck": 201,
+   "hours": 12.0,
+   "meeting": "Hard Rock Cafe | Lisboa Av. da Liberdade 2, 1250-144 Lisboa, Portugal. | Open in Google Maps",
+   "enter": "unstated"
+  },
+  "695100": {
+   "from": 52,
+   "struck": 65,
+   "hours": 7.5,
+   "meeting": "I Love Faro Sign | Praça Dom Francisco Gomes 5, 8000-168 Faro, Portugal",
+   "enter": "unstated"
+  },
+  "732531": {
+   "from": 56,
+   "struck": null,
+   "hours": 2.0,
+   "meeting": "Benagil eco tours (Kayak and Sup) | Benagil eco tours, 8400-450 Lagoa, Portugal",
+   "enter": "unstated"
+  },
+  "767658": {
+   "from": 39,
+   "struck": null,
+   "hours": 1.5,
+   "meeting": "Kayak & SUP Benagil | Estr. de Albandeira, Benagil, 8400-427 Lagoa, Portugal",
+   "enter": "unstated"
+  },
+  "768475": {
+   "from": 100,
+   "struck": null,
+   "hours": 8.0,
+   "meeting": "Monumento a Ferreira de Almeida | Av. da República, 8000-470 Faro, Portugal",
+   "enter": "unstated"
+  },
+  "847548": {
+   "from": 174,
+   "struck": 218,
+   "hours": 12.0,
+   "meeting": "For small group tours, please meet in front of Hard Rock Cafe Lisboa, Av. da Liberdade 2, 1250-144 Lisboa, Portugal. Our driver/guide will be holding a sign that says \"Lisbon Attractions Tours.\" | Open in Google Maps",
+   "enter": "unstated"
+  },
+  "874501": {
+   "from": 84,
+   "struck": null,
+   "hours": 5.0,
+   "meeting": "Faro Train Station, Largo da Estação, 8000-133 Faro, Portugal | View details",
+   "enter": "unstated"
+  },
+  "984797": {
+   "from": 50,
+   "struck": 56,
+   "hours": 6.0,
+   "meeting": "R. da Comunidade Lusíada, 8000-078 Faro, Portugal | View details",
+   "enter": "unstated"
+  },
+  "992506": {
+   "from": 37,
+   "struck": null,
+   "hours": 2.0,
+   "meeting": "Clube Naval, 8500-607 Portimão, Portugal | View details",
+   "enter": "unstated"
+  },
+  "1022816": {
+   "from": 13,
+   "struck": 26,
+   "hours": 1.5,
+   "meeting": "Atlantis Tours | Ac. Porto Comercial de Portimão, 8500-512 Portimão, Portugal",
+   "enter": "yes",
+   "cond": true
+  },
+  "1309612": {
+   "from": 39,
+   "struck": null,
+   "hours": 2.5,
+   "meeting": "3PMP+8M, 8200-185 Albufeira, Portugal | View details",
+   "enter": "unstated"
+  },
+  "1422696": {
+   "from": 9,
+   "struck": 11,
+   "hours": 2.0,
+   "meeting": "Discover Tours by AlgarExperience - Marina de Portimão | Rotunda da Marina, 8500-311 Portimão, Portugal",
+   "enter": "unstated"
+  }
+ }
+}

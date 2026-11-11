@@ -464,6 +464,7 @@ blockquote.voice cite { font-size: .78rem; color: var(--muted); font-style: norm
 .verdict-go     { background: #d4edda; color: #155724; }
 .verdict-caution{ background: #fff3cd; color: #856404; }
 .verdict-hold   { background: #f8d7da; color: #842029; }
+.verdict-neutral{ background: #e8eef2; color: #26434f; text-transform: none; letter-spacing: 0; font-size: .82rem; }
 
 .weather-stats { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
 .weather-stat { display: flex; flex-direction: column; gap: .06rem; }
@@ -481,6 +482,7 @@ blockquote.voice cite { font-size: .78rem; color: var(--muted); font-style: norm
 .wind-bar.go      { background: #6abf7b; }
 .wind-bar.caution { background: #f4c842; }
 .wind-bar.hold    { background: #e06060; }
+.wind-bar.neutral { background: #5d8a9a; }
 .wind-hour-val  { font-size: .72rem; font-weight: 700; color: var(--text); }
 .wind-hour-time { font-size: .63rem; color: var(--muted); white-space: nowrap; }
 .wind-hours-label { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-top: .9rem; }
@@ -521,6 +523,7 @@ blockquote.voice cite { font-size: .78rem; color: var(--muted); font-style: norm
 .conditions-pill .pill-dot.go      { background: #6abf7b; }
 .conditions-pill .pill-dot.caution { background: #f4c842; }
 .conditions-pill .pill-dot.hold    { background: #e06060; }
+.conditions-pill .pill-dot.neutral { background: #8fb3c0; }
 .conditions-pill .pill-wind { opacity: .75; font-weight: 400; margin-left: .1rem; }
 
 @media (max-width: 768px) {

@@ -1,191 +1,219 @@
 {
- "benagil-cave": {
-  "alt": "Benagil Cave from above: the round skylight in the clifftop, turquoise water and the hidden beach below, and tour boats waiting outside the western arch",
-  "caption": "The eye of Benagil from the clifftop. Every visit now happens from the water: boats at the western arch, guided kayaks at the eastern one.",
-  "kind": "hero",
-  "w": 1200,
-  "h": 630
- },
- "benagil-cave-tour-operators": {
-  "alt": "Tour boats and kayaks lined up on Benagil beach in the early morning before the first departures",
-  "caption": "Benagil beach before the first departures. The kayak and SUP operators launch from here; most boats leave from the towns either side.",
-  "kind": "hero",
-  "w": 1200,
-  "h": 630
- },
- "is-benagil-cave-worth-it": {
-  "alt": "The view from a tour boat paused at the western arch of Benagil Cave: empty beach inside, skylight above, other boats waiting outside",
-  "caption": "What a boat visit is now: two minutes at the arch, an empty beach nobody may land on, and the next boat waiting.",
-  "kind": "hero",
-  "w": 1200,
-  "h": 630
- },
- "benagil-cave-tour-from-carvoeiro": {
-  "alt": "Carvoeiro's beach cove with white houses on the cliffs and small Benagil tour boats loading at the water's edge",
-  "caption": "Carvoeiro: the boats load straight off the town beach, and the cave is a quarter of an hour east.",
-  "kind": "hero",
-  "w": 1200,
-  "h": 630
- },
- "benagil-cave-tour-from-armacao-de-pera": {
-  "alt": "A painted fishing boat and a tour RIB on the sand at Armacao de Pera, the closest big beach to Benagil",
-  "caption": "Armação de Pêra: launches off the beach beside the fishing boats, the closest big-town start to the cave.",
-  "kind": "hero",
-  "w": 1200,
-  "h": 630
- },
- "benagil-cave-tour-from-portimao": {
-  "alt": "Speedboats loading passengers at Portimao marina with the Praia da Rocha cliffs beyond",
-  "caption": "Portimão marina: the RIB fleet with the biggest review counts on the coast leaves from these pontoons.",
-  "kind": "hero",
-  "w": 1200,
-  "h": 630
- },
- "benagil-cave-tour-from-albufeira": {
-  "alt": "A tour catamaran ready to leave Albufeira marina, with the marina's pastel buildings behind",
-  "caption": "Albufeira marina: the catamaran and dolphin combos start here, an hour's cruise east of the cave.",
-  "kind": "hero",
-  "w": 1200,
-  "h": 630
- },
- "benagil-cave-tour-from-lagos": {
-  "alt": "A tour boat among the sea stacks of Ponta da Piedade near Lagos on the way to Benagil",
-  "caption": "Lagos trips pass Ponta da Piedade first; the cave is the far turnaround, 45 to 60 minutes out.",
-  "kind": "hero",
-  "w": 1200,
-  "h": 630
- },
- "benagil-cave-access-rules": {
-  "alt": "Diagram of the Benagil Cave access rules: boats two minutes by the western arch, guided kayaks eight minutes by the eastern entrance, no landing, no swimming",
-  "caption": "The 2024 rules in one picture: boats by the western arch for two minutes, guided paddlers by the eastern entrance for eight, nobody on the sand.",
-  "kind": "info",
-  "w": 1200,
-  "h": 675
- },
- "benagil-cave-sea-conditions": {
-  "alt": "Gauge of the swell thresholds for Benagil Cave: calm under 0.5 metres, choppy to 1.5 metres, closed above 1.5 metres",
-  "caption": "The one number that decides the day. The live reading at the top of this page uses the same three bands.",
-  "kind": "info",
-  "w": 1200,
-  "h": 675
- },
- "benagil-boat-tour-comparison": {
-  "alt": "Comparison chart of the four ways to visit Benagil Cave: speedboat, small boat, catamaran and guided kayak, by duration, price, and minutes inside",
-  "caption": "Four ways in. Every motorised boat gets the same two minutes; only a guided paddle gets eight.",
-  "kind": "info",
-  "w": 1200,
-  "h": 675
- },
- "benagil-cave-kayak-route": {
-  "alt": "Route diagram of a guided kayak visit to Benagil Cave: launch from Benagil beach, paddle 150 to 200 metres, enter by the eastern entrance for up to eight minutes",
-  "caption": "The paddle itself is short. The eight minutes inside are the whole point.",
-  "kind": "info",
-  "w": 1200,
-  "h": 675
- },
- "benagil-cave-departure-towns-map": {
-  "alt": "Schematic map of the Algarve coast showing one-way sea times to Benagil Cave from Lagos, Portimao, Carvoeiro, Armacao de Pera and Albufeira",
-  "caption": "One-way sea times, approximate. The closest launches spend the most of your trip at the cave.",
-  "kind": "info",
-  "w": 1200,
-  "h": 675
- },
- "benagil-cave-light-window": {
-  "alt": "Cross-section of Benagil Cave showing when sunlight falls through the skylight: soft early light, a direct beam from 10:00 to 13:00, and soft late-afternoon light",
-  "caption": "The beam is a light-viewing window, not a legal one. The access rules cap craft and minutes, not the clock.",
-  "kind": "info",
-  "w": 1200,
-  "h": 675
- },
- "benagil-cave-worth-it-verdict": {
-  "alt": "Chart of what a Benagil visit gets you now: two minutes by boat, eight minutes by guided kayak, and the old beach landing and swim-in banned since August 2024",
-  "caption": "Set the expectation before you book: it is a from-the-water visit, and the paddle is the long one.",
-  "kind": "info",
-  "w": 1200,
-  "h": 675
- },
- "benagil-cave-kayak-vs-sup": {
-  "alt": "Comparison of kayak and stand-up paddleboard tours into Benagil Cave: stability, viewpoint, sea conditions and starting prices",
-  "caption": "Same entrance, same eight minutes. The board buys the viewpoint; the kayak buys the stability.",
-  "kind": "info",
-  "w": 1200,
-  "h": 675
- },
- "benagil-boat-tour": {
-  "alt": "A small speedboat pausing at the western mouth of Benagil cave, with the round skylight and turquoise water inside",
-  "caption": "The western arch: the only way in for a motorised boat, and a two-minute visit whatever you arrive on.",
-  "kind": "hero",
-  "w": 1200,
-  "h": 630
- },
- "benagil-cave-kayak-tour": {
-  "alt": "Tandem kayaks with a guide entering Benagil cave through the eastern arch under the skylight beam",
-  "caption": "The eastern entrance, single file, one guide per six craft: eight minutes under the eye.",
-  "kind": "hero",
-  "w": 1200,
-  "h": 630
- },
- "benagil-boat-tour-comparison-towns": {
-  "alt": "Comparison chart of the four ways to visit Benagil Cave: speedboat, small boat, catamaran and guided kayak, by duration, where they leave from, and minutes inside",
-  "caption": "Four ways in. Every motorised boat gets the same two minutes; only a guided paddle gets eight. Live prices are on the cards below.",
-  "kind": "info",
-  "w": 1200,
-  "h": 675
- },
- "slide-and-splash": {
-  "alt": "Illustration of colourful water slides winding down a hillside into a large pool in the central Algarve",
-  "caption": "An illustration, not a photo of the park. Slide & Splash is at Estombar, Lagoa, about 10 km by road from Carvoeiro.",
-  "kind": "hero",
-  "w": 1200,
-  "h": 630
- },
- "slide-and-splash-know-before-you-go": {
-  "alt": "Infographic for Slide & Splash: open 1 April to 31 October from 10:00, closing 17:00 to 18:00 by month; most slides need 1 m height, float slides from 0.90 m with an adult; online check-in required; about 15 minutes from Carvoeiro",
-  "caption": "The park's own rules from its 2026 listing and website. Hours change by month; check-in online before you go.",
-  "kind": "info",
-  "w": 1200,
-  "h": 675
- },
- "benagil-cave-tour-from-faro": {
-  "alt": "Illustration of walkers at a clifftop fence looking down through the round skylight of Benagil Cave to the beach inside",
-  "caption": "An illustration, not a photo. Most day trips from Faro see Benagil like this, from the clifftop path, without a boat.",
-  "kind": "hero",
-  "w": 1200,
-  "h": 630
- },
- "benagil-cave-tour-from-lisbon": {
-  "alt": "Illustration of a tour minivan at a clifftop viewpoint on the Algarve coast, with a small boat heading for the sea caves below",
-  "caption": "An illustration, not a photo. From Lisbon it is a long day by road: about three hours each way to the cave coast.",
-  "kind": "hero",
-  "w": 1200,
-  "h": 630
- },
- "benagil-dolphin-departures-map": {
-  "alt": "Map of the Algarve coast from Lagos to Albufeira showing Benagil Cave and the marinas at Lagos, Portimão and Albufeira, with Armação de Pêra",
-  "caption": "Where the cave-and-dolphin boats leave from. Albufeira and Lagos are the long runs; Portimão sits in between.",
-  "kind": "map",
-  "w": 1400,
-  "h": 759
- },
- "benagil-marinha-carvoeiro-caves-map": {
-  "alt": "Map of the coast from Praia do Carvoeiro and Algar Seco past Vale Centeanes, Praia do Carvalho and Benagil Cave to Praia da Marinha and Albandeira",
-  "caption": "Carvoeiro to Albandeira: Algar Seco and the Carvoeiro caves in the west, Benagil in the middle, Praia da Marinha about a kilometre to its east.",
-  "kind": "map",
-  "w": 1400,
-  "h": 900
- },
- "benagil-cave-rules-area-map": {
-  "alt": "Map of the Lagoa coast covered by the Benagil navigation rules, from Praia do Vale da Lapa west of Carvoeiro to Praia da Albandeira, with Benagil Cave marked",
-  "caption": "The rules cover the water within 500 metres of the coast from Praia do Vale da Lapa to Praia da Albandeira. Boats get two minutes inside the cave, paddlers eight.",
-  "kind": "map",
-  "w": 1400,
-  "h": 800
- },
- "benagil-kayak-launch-beaches-map": {
-  "alt": "Map of the launch beaches for Benagil kayak tours: Praia do Carvalho, Praia de Benagil, Praia da Marinha and Praia da Albandeira, with Benagil Cave next to Praia de Benagil",
-  "caption": "The paddle is short: Benagil Cave sits beside Praia de Benagil, where most guided paddles launch. Praia do Carvalho and Albandeira are the other starts.",
-  "kind": "map",
-  "w": 1400,
-  "h": 800
- }
+  "benagil-cave": {
+    "alt": "Benagil Cave from above: the round skylight in the clifftop, turquoise water and the hidden beach below, and tour boats waiting outside the western arch",
+    "caption": "The eye of Benagil from the clifftop. Every visit now happens from the water: boats at the western arch, guided kayaks at the eastern one.",
+    "kind": "hero",
+    "w": 1200,
+    "h": 630
+  },
+  "benagil-cave-tour-operators": {
+    "alt": "Tour boats and kayaks lined up on Benagil beach in the early morning before the first departures",
+    "caption": "Benagil beach before the first departures. The kayak and SUP operators launch from here; most boats leave from the towns either side.",
+    "kind": "hero",
+    "w": 1200,
+    "h": 630
+  },
+  "is-benagil-cave-worth-it": {
+    "alt": "The view from a tour boat paused at the western arch of Benagil Cave: empty beach inside, skylight above, other boats waiting outside",
+    "caption": "What a boat visit is now: two minutes at the arch, an empty beach nobody may land on, and the next boat waiting.",
+    "kind": "hero",
+    "w": 1200,
+    "h": 630
+  },
+  "benagil-cave-tour-from-carvoeiro": {
+    "alt": "Carvoeiro's beach cove with white houses on the cliffs and small Benagil tour boats loading at the water's edge",
+    "caption": "Carvoeiro: the boats load straight off the town beach, and the cave is a quarter of an hour east.",
+    "kind": "hero",
+    "w": 1200,
+    "h": 630
+  },
+  "benagil-cave-tour-from-armacao-de-pera": {
+    "alt": "A painted fishing boat and a tour RIB on the sand at Armacao de Pera, the closest big beach to Benagil",
+    "caption": "Armação de Pêra: launches off the beach beside the fishing boats, the closest big-town start to the cave.",
+    "kind": "hero",
+    "w": 1200,
+    "h": 630
+  },
+  "benagil-cave-tour-from-portimao": {
+    "alt": "Speedboats loading passengers at Portimao marina with the Praia da Rocha cliffs beyond",
+    "caption": "Portimão marina: the RIB fleet with the biggest review counts on the coast leaves from these pontoons.",
+    "kind": "hero",
+    "w": 1200,
+    "h": 630
+  },
+  "benagil-cave-tour-from-albufeira": {
+    "alt": "A tour catamaran ready to leave Albufeira marina, with the marina's pastel buildings behind",
+    "caption": "Albufeira marina: the catamaran and dolphin combos start here, an hour's cruise east of the cave.",
+    "kind": "hero",
+    "w": 1200,
+    "h": 630
+  },
+  "benagil-cave-tour-from-lagos": {
+    "alt": "A tour boat among the sea stacks of Ponta da Piedade near Lagos on the way to Benagil",
+    "caption": "Lagos trips pass Ponta da Piedade first; the cave is the far turnaround, 45 to 60 minutes out.",
+    "kind": "hero",
+    "w": 1200,
+    "h": 630
+  },
+  "benagil-cave-access-rules": {
+    "alt": "Diagram of the Benagil Cave access rules: boats two minutes by the western arch, guided kayaks eight minutes by the eastern entrance, no landing, no swimming",
+    "caption": "The 2024 rules in one picture: boats by the western arch for two minutes, guided paddlers by the eastern entrance for eight, nobody on the sand.",
+    "kind": "info",
+    "w": 1200,
+    "h": 675
+  },
+  "benagil-cave-sea-conditions": {
+    "alt": "Gauge of the swell thresholds for Benagil Cave: calm under 0.5 metres, choppy to 1.5 metres, closed above 1.5 metres",
+    "caption": "The one number that decides the day. The live reading at the top of this page uses the same three bands.",
+    "kind": "info",
+    "w": 1200,
+    "h": 675
+  },
+  "benagil-boat-tour-comparison": {
+    "alt": "Comparison chart of the four ways to visit Benagil Cave: speedboat, small boat, catamaran and guided kayak, by duration, price, and minutes inside",
+    "caption": "Four ways in. Every motorised boat gets the same two minutes; only a guided paddle gets eight.",
+    "kind": "info",
+    "w": 1200,
+    "h": 675
+  },
+  "benagil-cave-kayak-route": {
+    "alt": "Route diagram of a guided kayak visit to Benagil Cave: launch from Benagil beach, paddle 150 to 200 metres, enter by the eastern entrance for up to eight minutes",
+    "caption": "The paddle itself is short. The eight minutes inside are the whole point.",
+    "kind": "info",
+    "w": 1200,
+    "h": 675
+  },
+  "benagil-cave-departure-towns-map": {
+    "alt": "Schematic map of the Algarve coast showing one-way sea times to Benagil Cave from Lagos, Portimao, Carvoeiro, Armacao de Pera and Albufeira",
+    "caption": "One-way sea times, approximate. The closest launches spend the most of your trip at the cave.",
+    "kind": "info",
+    "w": 1200,
+    "h": 675
+  },
+  "benagil-cave-light-window": {
+    "alt": "Cross-section of Benagil Cave showing when sunlight falls through the skylight: soft early light, a direct beam from 10:00 to 13:00, and soft late-afternoon light",
+    "caption": "The beam is a light-viewing window, not a legal one. The access rules cap craft and minutes, not the clock.",
+    "kind": "info",
+    "w": 1200,
+    "h": 675
+  },
+  "benagil-cave-worth-it-verdict": {
+    "alt": "Chart of what a Benagil visit gets you now: two minutes by boat, eight minutes by guided kayak, and the old beach landing and swim-in banned since August 2024",
+    "caption": "Set the expectation before you book: it is a from-the-water visit, and the paddle is the long one.",
+    "kind": "info",
+    "w": 1200,
+    "h": 675
+  },
+  "benagil-cave-kayak-vs-sup": {
+    "alt": "Comparison of kayak and stand-up paddleboard tours into Benagil Cave: stability, viewpoint, sea conditions and starting prices",
+    "caption": "Same entrance, same eight minutes. The board buys the viewpoint; the kayak buys the stability.",
+    "kind": "info",
+    "w": 1200,
+    "h": 675
+  },
+  "benagil-boat-tour": {
+    "alt": "A small speedboat pausing at the western mouth of Benagil cave, with the round skylight and turquoise water inside",
+    "caption": "The western arch: the only way in for a motorised boat, and a two-minute visit whatever you arrive on.",
+    "kind": "hero",
+    "w": 1200,
+    "h": 630
+  },
+  "benagil-cave-kayak-tour": {
+    "alt": "Tandem kayaks with a guide entering Benagil cave through the eastern arch under the skylight beam",
+    "caption": "The eastern entrance, single file, one guide per six craft: eight minutes under the eye.",
+    "kind": "hero",
+    "w": 1200,
+    "h": 630
+  },
+  "benagil-boat-tour-comparison-towns": {
+    "alt": "Comparison chart of the four ways to visit Benagil Cave: speedboat, small boat, catamaran and guided kayak, by duration, where they leave from, and minutes inside",
+    "caption": "Four ways in. Every motorised boat gets the same two minutes; only a guided paddle gets eight. Live prices are on the cards below.",
+    "kind": "info",
+    "w": 1200,
+    "h": 675
+  },
+  "slide-and-splash": {
+    "alt": "Illustration of colourful water slides winding down a hillside into a large pool in the central Algarve",
+    "caption": "An illustration, not a photo of the park. Slide & Splash is at Estombar, Lagoa, about 10 km by road from Carvoeiro.",
+    "kind": "hero",
+    "w": 1200,
+    "h": 630
+  },
+  "slide-and-splash-know-before-you-go": {
+    "alt": "Infographic for Slide & Splash: open 1 April to 31 October from 10:00, closing 17:00 to 18:00 by month; most slides need 1 m height, float slides from 0.90 m with an adult; online check-in required; about 15 minutes from Carvoeiro",
+    "caption": "The park's own rules from its 2026 listing and website. Hours change by month; check-in online before you go.",
+    "kind": "info",
+    "w": 1200,
+    "h": 675
+  },
+  "benagil-cave-tour-from-faro": {
+    "alt": "Illustration of walkers at a clifftop fence looking down through the round skylight of Benagil Cave to the beach inside",
+    "caption": "An illustration, not a photo. Most day trips from Faro see Benagil like this, from the clifftop path, without a boat.",
+    "kind": "hero",
+    "w": 1200,
+    "h": 630
+  },
+  "benagil-cave-tour-from-lisbon": {
+    "alt": "Illustration of a tour minivan at a clifftop viewpoint on the Algarve coast, with a small boat heading for the sea caves below",
+    "caption": "An illustration, not a photo. From Lisbon it is a long day by road: about three hours each way to the cave coast.",
+    "kind": "hero",
+    "w": 1200,
+    "h": 630
+  },
+  "benagil-dolphin-departures-map": {
+    "alt": "Map of the Algarve coast from Lagos to Albufeira showing Benagil Cave and the marinas at Lagos, Portimão and Albufeira, with Armação de Pêra",
+    "caption": "Where the cave-and-dolphin boats leave from. Albufeira and Lagos are the long runs; Portimão sits in between.",
+    "kind": "map",
+    "w": 1400,
+    "h": 759
+  },
+  "benagil-marinha-carvoeiro-caves-map": {
+    "alt": "Map of the coast from Praia do Carvoeiro and Algar Seco past Vale Centeanes, Praia do Carvalho and Benagil Cave to Praia da Marinha and Albandeira",
+    "caption": "Carvoeiro to Albandeira: Algar Seco and the Carvoeiro caves in the west, Benagil in the middle, Praia da Marinha about a kilometre to its east.",
+    "kind": "map",
+    "w": 1400,
+    "h": 900
+  },
+  "benagil-cave-rules-area-map": {
+    "alt": "Map of the Lagoa coast covered by the Benagil navigation rules, from Praia do Vale da Lapa west of Carvoeiro to Praia da Albandeira, with Benagil Cave marked",
+    "caption": "The rules cover the water within 500 metres of the coast from Praia do Vale da Lapa to Praia da Albandeira. Boats get two minutes inside the cave, paddlers eight.",
+    "kind": "map",
+    "w": 1400,
+    "h": 800
+  },
+  "benagil-kayak-launch-beaches-map": {
+    "alt": "Map of the launch beaches for Benagil kayak tours: Praia do Carvalho, Praia de Benagil, Praia da Marinha and Praia da Albandeira, with Benagil Cave next to Praia de Benagil",
+    "caption": "The paddle is short: Benagil Cave sits beside Praia de Benagil, where most guided paddles launch. Praia do Carvalho and Albandeira are the other starts.",
+    "kind": "map",
+    "w": 1400,
+    "h": 800
+  },
+  "benagil-caves-and-dolphins": {
+    "alt": "Illustration of three dolphins leaping out of the sea near a white tour boat, in front of golden limestone cliffs with sea caves",
+    "caption": "Illustration. Dolphins leaping near a tour boat off golden cliffs; the dolphin search happens in open water, and the cave coast is the other half of the trip.",
+    "kind": "illustration",
+    "w": 1200,
+    "h": 675
+  },
+  "praia-da-marinha-carvoeiro-caves": {
+    "alt": "Illustration of limestone arches, a sea stack and a sandy cove seen from the bow of a small boat on turquoise water",
+    "caption": "Illustration. Limestone arches and a sea stack along this stretch of coast, seen from a boat&#39;s bow.",
+    "kind": "illustration",
+    "w": 1200,
+    "h": 675
+  },
+  "benagil-cave-rules": {
+    "alt": "Illustration of a guided group of six kayakers in life jackets and helmets inside a sea cave with a skylight, with a small boat waiting outside one of the arches",
+    "caption": "Illustration. A guided group of six kayakers in life jackets and helmets inside the cave, a boat waiting outside. The rules set a guided group at six craft with one guide.",
+    "kind": "illustration",
+    "w": 1200,
+    "h": 675
+  },
+  "benagil-cave-kayak-rental": {
+    "alt": "Illustration of a guide briefing a small group in life jackets beside kayaks on a beach below golden cliffs",
+    "caption": "Illustration. A guide briefing a group beside the kayaks on a beach before a guided paddle.",
+    "kind": "illustration",
+    "w": 1200,
+    "h": 675
+  }
 }
