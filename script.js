@@ -1,7 +1,5 @@
 /* ============================================================
-   Benagil Cave — Interactions
-   Cloned from emeraldcavevegas.com; weather→Open-Meteo MARINE,
-   affiliate/booking-map machinery removed (content-only v1).
+   Benagil Cave: interactions
    ============================================================ */
 
 // ── STICKY HEADER ──────────────────────────────────────────
@@ -103,21 +101,25 @@ document.querySelectorAll(['.gem-card', '.season-item', '.op-entry'].join(',')).
   observer.observe(el);
 });
 
-// ── OPEN-METEO MARINE WIDGET ───────────────────────────────
-// Significant wave height is the access gate for a sea cave: the algar closes
-// on Atlantic swell over ~1.5 m regardless of tide (operator rule of thumb).
+// -- SEA CONDITIONS (Open-Meteo marine + forecast models at the cave) --------
+// The cave rules carry no wave-height limit: the skipper decides at the cave and the
+// Capitania closes the caves by notice to mariners. So the strip states the numbers and
+// ranks the current wave height against the last 30 days of hourly values at the same
+// grid point (lower third CALM, middle MODERATE, upper third ROUGH). It never says
+// "open" or "closed". Fetch failure leaves the static CHECK FIRST default in place.
 const LAT = 37.0868, LON = -8.4238;            // Algar de Benagil
 const weatherEl = document.getElementById('weatherWidget');
 const pill      = document.getElementById('conditionsPill');
 
-// The pill is the booking nudge once the verdict is in: it lands on the page's
-// own pinned calendar (#availability). Only a HOLD (heavy swell) verdict routes
-// to the sea-conditions read instead.
+// The pill is the booking nudge once the reading is in: it lands on the page's own
+// pinned calendar (#availability). A ROUGH reading routes to the rules page section
+// that explains who closes the cave.
 let pillTarget = 'availability';
 if (pill) {
   const cond = pill.querySelector('.pill-conditions');
   if (cond) cond.addEventListener('click', () => {
-    const el = document.getElementById(pillTarget) || document.getElementById('availability') || document.getElementById('safety');
+    if (pillTarget === 'rules') { window.location.href = '/benagil-cave-rules#weather'; return; }
+    const el = document.getElementById(pillTarget) || document.getElementById('availability');
     if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' });
     else window.location.href = '/#availability';
   });
@@ -127,135 +129,142 @@ function degToCompass(d) {
   const dirs = ['N','NE','E','SE','S','SW','W','NW'];
   return dirs[Math.round(d / 45) % 8];
 }
-// verdict keyed on significant wave height (metres)
-function verdictClass(h) { return h < 0.5 ? 'go' : h < 1.5 ? 'caution' : 'hold'; }
-function verdictText(h) {
-  if (h < 0.5) return '✓ Calm — cave likely accessible';
-  if (h < 1.5) return '⚠ Choppy — confirm with your operator';
-  return '✗ Heavy swell — the cave is likely closed';
+function quantile(sorted, q) {
+  if (!sorted.length) return null;
+  const pos = (sorted.length - 1) * q, lo = Math.floor(pos), hi = Math.ceil(pos);
+  return sorted[lo] + (sorted[hi] - sorted[lo]) * (pos - lo);
 }
+// state of a wave height against the 30-day cut points: 'calm' | 'moderate' | 'rough' | null
+function seaState(h, cuts) {
+  if (!cuts || h == null) return null;
+  return h <= cuts.p33 ? 'calm' : h <= cuts.p66 ? 'moderate' : 'rough';
+}
+const STATE = {
+  calm:     { word: 'CALM',     dot: 'verdict-dot--go',      pill: 'go',
+              label: 'Calmer than most of the last 30 days here',
+              cta: 'Book a boat for a calm sea &rarr;', href: '#availability' },
+  moderate: { word: 'MODERATE', dot: 'verdict-dot--caution', pill: 'caution',
+              label: 'About the middle of the last 30 days here',
+              cta: 'Pick a date, cancel free &rarr;', href: '#availability' },
+  rough:    { word: 'ROUGH',    dot: 'verdict-dot--hold',    pill: 'hold',
+              label: 'Rougher than most of the last 30 days here',
+              cta: 'Who closes the cave? &rarr;', href: '/benagil-cave-rules#weather' },
+};
 
 const WMO = {
   0:'Clear sky', 1:'Mainly clear', 2:'Partly cloudy', 3:'Overcast',
   45:'Fog', 48:'Icy fog', 51:'Light drizzle', 53:'Drizzle', 55:'Heavy drizzle',
   61:'Light rain', 63:'Rain', 65:'Heavy rain', 80:'Light showers', 81:'Showers',
-  82:'Heavy showers', 95:'Thunderstorm', 96:'Thunderstorm + hail', 99:'Thunderstorm + heavy hail'
+  82:'Heavy showers', 95:'Thunderstorm', 96:'Thunderstorm with hail', 99:'Thunderstorm with heavy hail'
 };
 
-if (weatherEl || pill) {
+if (weatherEl || pill || document.getElementById('strip-verdict-word')) {
   const marineURL = 'https://marine-api.open-meteo.com/v1/marine?latitude=' + LAT + '&longitude=' + LON +
-    '&current=wave_height,wave_period,wave_direction,swell_wave_height,sea_surface_temperature' +
-    '&hourly=wave_height&timezone=Europe%2FLisbon&forecast_days=1';
+    '&current=wave_height,wave_period,wave_direction,sea_surface_temperature' +
+    '&hourly=wave_height&past_days=30&forecast_days=1&timezone=Europe%2FLisbon';
   const airURL = 'https://api.open-meteo.com/v1/forecast?latitude=' + LAT + '&longitude=' + LON +
-    '&current=temperature_2m,wind_speed_10m,weather_code&timezone=Europe%2FLisbon&forecast_days=1';
+    '&current=temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code&timezone=Europe%2FLisbon&forecast_days=1';
 
-  Promise.all([
-    fetch(marineURL).then(r => r.json()),
-    fetch(airURL).then(r => r.json()).catch(() => null),
-  ]).then(([m, a]) => {
-    const c       = m.current;
-    const waveH   = +c.wave_height;
-    const swellH  = c.swell_wave_height != null ? +c.swell_wave_height : null;
-    const period  = c.wave_period != null ? Math.round(c.wave_period) : null;
-    const seaT    = c.sea_surface_temperature != null ? Math.round(c.sea_surface_temperature) : null;
-    const dir     = degToCompass(c.wave_direction || 0);
-    const airC    = a && a.current ? Math.round(a.current.temperature_2m) : null;
-    const wind    = a && a.current ? Math.round(a.current.wind_speed_10m) : null;
-    const desc    = a && a.current ? (WMO[a.current.weather_code] || 'Variable') : '';
-    const now     = new Date().toLocaleTimeString('en-GB', { hour: 'numeric', minute: '2-digit', timeZone: 'Europe/Lisbon' });
-    const vCls    = verdictClass(waveH);
-    const vTxt    = verdictText(waveH);
+  try {
+    Promise.all([
+      fetch(marineURL).then(r => r.json()),
+      fetch(airURL).then(r => r.json()).catch(() => null),
+    ]).then(([m, a]) => {
+      try {
+        const c = m && m.current;
+        if (!c || typeof c.wave_height !== 'number') return;
+        const waveH  = +c.wave_height;
+        const period = c.wave_period != null ? Math.round(c.wave_period) : null;
+        const seaT   = c.sea_surface_temperature != null ? Math.round(c.sea_surface_temperature) : null;
+        const dir    = degToCompass(c.wave_direction || 0);
+        const ac     = a && a.current ? a.current : null;
+        const wind   = ac && ac.wind_speed_10m != null ? Math.round(ac.wind_speed_10m) : null;
+        const gust   = ac && ac.wind_gusts_10m != null ? Math.round(ac.wind_gusts_10m) : null;
+        const wdir   = ac && ac.wind_direction_10m != null ? degToCompass(ac.wind_direction_10m) : '';
+        const airC   = ac && ac.temperature_2m != null ? Math.round(ac.temperature_2m) : null;
+        const desc   = ac ? (WMO[ac.weather_code] || '') : '';
+        const now    = new Date().toLocaleTimeString('en-GB', { hour: 'numeric', minute: '2-digit', timeZone: 'Europe/Lisbon' });
 
-    // hourly wave-height bars — next 7 hours from current hour
-    const curHour = new Date(c.time).getHours();
-    const hWaves  = m.hourly.wave_height;
-    const hours   = [];
-    for (let i = 0; i < 7; i++) {
-      const idx = curHour + i;
-      if (idx < hWaves.length) hours.push({ h: +hWaves[idx], hr: idx });
-    }
-    const maxW = Math.max(...hours.map(h => h.h), 1);
-    const fmtH = hr => (hr % 24).toString().padStart(2, '0') + 'h';
-    const hourBars = hours.map((h, i) => {
-      const pct   = Math.max(6, Math.round((h.h / maxW) * 100));
-      const cls   = verdictClass(h.h);
-      const label = i === 0 ? 'Now' : fmtH(h.hr);
-      return '<div class="wind-hour">' +
-        '<div class="wind-bar-wrap"><div class="wind-bar ' + cls + '" style="height:' + pct + '%"></div></div>' +
-        '<span class="wind-hour-val">' + h.h.toFixed(1) + '</span>' +
-        '<span class="wind-hour-time">' + label + '</span></div>';
-    }).join('');
+        // 30-day cut points from the hourly values before the current hour
+        const times = (m.hourly && m.hourly.time) || [];
+        const hw = (m.hourly && m.hourly.wave_height) || [];
+        const nowKey = String(c.time || '').slice(0, 13);
+        let iNow = times.findIndex(t => String(t).slice(0, 13) === nowKey);
+        if (iNow < 0) iNow = times.length;
+        const past = hw.slice(0, iNow).filter(v => typeof v === 'number').sort((x, y) => x - y);
+        const cuts = past.length >= 200 ? { p33: quantile(past, 1 / 3), p66: quantile(past, 2 / 3) } : null;
+        const st = seaState(waveH, cuts);
+        const S = st ? STATE[st] : null;
 
-    if (weatherEl) {
-      const stats = [];
-      if (swellH != null) stats.push(['<span class="weather-stat-n">' + swellH.toFixed(1) + ' m</span>', 'Swell']);
-      if (period != null) stats.push(['<span class="weather-stat-n">' + period + ' s</span>', 'Period']);
-      if (airC != null)   stats.push(['<span class="weather-stat-n">' + airC + '°C</span>', 'Air']);
-      if (wind != null)   stats.push(['<span class="weather-stat-n">' + wind + ' km/h</span>', 'Wind']);
-      const statsHtml = stats.map(s =>
-        '<div class="weather-stat">' + s[0] + '<span class="weather-stat-l">' + s[1] + '</span></div>').join('');
+        // -- the home page strip
+        const stripWord = document.getElementById('strip-verdict-word');
+        if (stripWord) {
+          const sw = document.getElementById('strip-wave');   if (sw) sw.textContent = waveH.toFixed(1) + ' m';
+          const sp = document.getElementById('strip-period'); if (sp) sp.textContent = period != null ? period + ' s' : '-';
+          const sd = document.getElementById('strip-wind');   if (sd) sd.innerHTML = wind != null ? wind + ' km/h' + (wdir ? ' ' + wdir : '') : '-';
+          if (S) {
+            stripWord.innerHTML = '<span class="verdict-dot ' + S.dot + '"></span> ' + S.word;
+            const wl = document.getElementById('strip-verdict-label'); if (wl) wl.innerHTML = S.label;
+            const cta = document.getElementById('verdict-cta');
+            if (cta) { cta.innerHTML = S.cta; cta.setAttribute('href', S.href); }
+          }
+          const hon = document.getElementById('strip-honest');
+          if (hon && cuts) hon.innerHTML = 'Hourly model at the cave, ranked against its last 30 days (calm up to ' + cuts.p33.toFixed(1) + ' m, rough above ' + cuts.p66.toFixed(1) + ' m)';
+          const tm = document.getElementById('verdict-time'), live = document.getElementById('verdict-live');
+          if (tm && live) { tm.textContent = now; live.hidden = false; }
+        }
 
-      weatherEl.classList.add('loaded');
-      weatherEl.innerHTML =
-        '<div class="weather-header">' +
-          '<span class="weather-title">Sea conditions off Benagil' +
-            '<span class="live-badge"><span class="live-dot"></span> Live</span></span>' +
-          '<span class="weather-updated">Updated ' + now + '</span>' +
-        '</div>' +
-        '<div class="weather-body">' +
-          '<div class="weather-main">' +
-            '<span class="weather-temp">' + waveH.toFixed(1) + ' m <span class="weather-temp-c">wave ' + dir + '</span></span>' +
-            (desc ? '<span class="weather-desc">' + desc + '</span>' : '') +
-            '<span class="weather-verdict verdict-' + vCls + '">' + vTxt + '</span>' +
-          '</div>' +
-          '<div>' +
-            '<div class="weather-stats">' + statsHtml + '</div>' +
-            '<p class="wind-hours-label">Wave height — next 7 hours (m)</p>' +
-            '<div class="wind-hours">' + hourBars + '</div>' +
-          '</div>' +
-        '</div>' +
-        '<div class="sea-note">' +
-          '<strong>The algar closes on swell over ~1.5 m</strong> regardless of tide — sea state, not tide, decides whether boats and kayaks can enter. ' +
-          'November–March, operators run calm days only.' +
-          (seaT != null ? ' Sea temperature today ≈ ' + seaT + '°C.' : '') +
-        '</div>';
-    }
+        // -- the sea-conditions section: numbers, next hours, what the rules say
+        if (weatherEl) {
+          const stats = [];
+          if (period != null) stats.push([period + ' s', 'Wave period']);
+          if (wind != null)   stats.push([wind + ' km/h' + (wdir ? ' ' + wdir : ''), 'Wind']);
+          if (gust != null)   stats.push([gust + ' km/h', 'Gusts']);
+          if (seaT != null)   stats.push([seaT + '&deg;C', 'Sea']);
+          if (airC != null)   stats.push([airC + '&deg;C', 'Air']);
+          const statsHtml = stats.map(s => '<div class="weather-stat"><span class="weather-stat-n">' + s[0] +
+            '</span><span class="weather-stat-l">' + s[1] + '</span></div>').join('');
+          const hours = [];
+          for (let i = 0; i < 7; i++) {
+            const idx = iNow + i;
+            if (idx < hw.length && typeof hw[idx] === 'number') hours.push({ h: +hw[idx], t: String(times[idx]).slice(11, 13) });
+          }
+          const maxW = Math.max(...hours.map(h => h.h), 1);
+          const bars = hours.map((h, i) => {
+            const pct = Math.max(6, Math.round((h.h / maxW) * 100));
+            const cls = (STATE[seaState(h.h, cuts)] || {}).pill || 'caution';
+            return '<div class="wind-hour"><div class="wind-bar-wrap"><div class="wind-bar ' + cls + '" style="height:' + pct + '%"></div></div>' +
+              '<span class="wind-hour-val">' + h.h.toFixed(1) + '</span><span class="wind-hour-time">' + (i === 0 ? 'Now' : h.t + 'h') + '</span></div>';
+          }).join('');
+          weatherEl.classList.add('loaded');
+          weatherEl.innerHTML =
+            '<div class="weather-header"><span class="weather-title">Sea off Benagil Cave</span>' +
+            '<span class="weather-updated">checked ' + now + ' in Benagil</span></div>' +
+            '<div class="weather-body"><div class="weather-main">' +
+              '<span class="weather-temp">' + waveH.toFixed(1) + ' m <span class="weather-temp-c">waves from the ' + dir + '</span></span>' +
+              (desc ? '<span class="weather-desc">' + desc + '</span>' : '') +
+              (S ? '<span class="weather-verdict verdict-' + S.pill + '">' + S.word + ': ' + S.label + '</span>' : '') +
+            '</div><div><div class="weather-stats">' + statsHtml + '</div>' +
+            (bars ? '<p class="wind-hours-label">Wave height, next hours (m)</p><div class="wind-hours">' + bars + '</div>' : '') +
+            '</div></div>' +
+            '<div class="sea-note">No wave height is written into the cave rules. The skipper or guide decides at the cave, and the Capitania do Porto de Portim&atilde;o closes the caves by a notice to mariners when the sea does not allow visits. ' +
+            'The bands compare today with the last 30 days at this spot; they are not an operator&rsquo;s cut-off.</div>';
+        }
 
-    // ── VERDICT STRIP v4 (homepage) — chip, CTA beside it, evidence tiles ──
-    const stripWord = document.getElementById('strip-verdict-word');
-    if (stripWord) {
-      const word = waveH < 0.5 ? 'CALM' : waveH < 1.5 ? 'CHOPPY' : 'SWELL';
-      const wlab = waveH < 0.5 ? 'Boats and kayaks should be entering the cave today'
-                 : waveH < 1.5 ? 'Marginal — the captains decide at the slipway'
-                 : 'Over the ~1.5 m limit — the cave is likely closed';
-      const dotCls = waveH < 0.5 ? 'verdict-dot--go' : waveH < 1.5 ? 'verdict-dot--caution' : 'verdict-dot--hold';
-      stripWord.innerHTML = '<span class="verdict-dot ' + dotCls + '"></span> ' + word;
-      const wl = document.getElementById('strip-verdict-label'); if (wl) wl.textContent = wlab;
-      const sw = document.getElementById('strip-wave'); if (sw) sw.textContent = waveH.toFixed(1) + ' m';
-      const st = document.getElementById('strip-seatemp'); if (st) st.textContent = seaT != null ? seaT + '°C' : '—';
-      const cta = document.getElementById('verdict-cta');
-      if (cta) {
-        if (waveH < 1.5) { cta.innerHTML = 'Book the cave trip &rarr;'; cta.setAttribute('href', '#availability'); }
-        else { cta.innerHTML = 'Read the sea &amp; safety guide &rarr;'; cta.setAttribute('href', '#safety'); }
-      }
-      const tm = document.getElementById('verdict-time'), live = document.getElementById('verdict-live');
-      if (tm && live) { tm.textContent = now; live.hidden = false; }
-    }
-
-    if (pill) {
-      pill.querySelector('.pill-dot').className = 'pill-dot ' + vCls;
-      pill.querySelector('.pill-wind').textContent = waveH.toFixed(1) + ' m';
-      const pc = pill.querySelector('.pill-cta');
-      // the ask names what the page's pinned calendar sells (boat by default; kayak on the paddle page)
-      if (pc) pc.textContent = waveH < 1.5 ? '· ' + (pill.dataset.cta || 'Book a boat') + ' →' : '· Sea conditions →';
-      pillTarget = waveH < 1.5 ? 'availability' : 'safety';
-      pill.style.display = 'flex';
-    }
-  }).catch(() => {
-    if (weatherEl) weatherEl.innerHTML = '<span class="weather-loading">Live sea data unavailable — ' +
-      'check a marine forecast (e.g. <a href="https://www.windguru.cz/" target="_blank" rel="noopener noreferrer">Windguru</a>) ' +
-      'for Benagil swell before booking.</span>';
-  });
+        if (pill && S) {
+          pill.querySelector('.pill-dot').className = 'pill-dot ' + S.pill;
+          pill.querySelector('.pill-wind').textContent = waveH.toFixed(1) + ' m';
+          const pc = pill.querySelector('.pill-cta');
+          if (pc) pc.innerHTML = st !== 'rough' ? '&middot; ' + (pill.dataset.cta || 'Book a boat') + ' &rarr;' : '&middot; Who closes the cave &rarr;';
+          pillTarget = st !== 'rough' ? 'availability' : 'rules';
+          pill.style.display = 'flex';
+        }
+      } catch (e) { /* keep the static default */ }
+    }).catch(() => {
+      if (weatherEl) weatherEl.innerHTML = '<span class="weather-loading">Live sea data unavailable. Check a marine forecast for Benagil before booking; ' +
+        'the skipper decides on the day.</span>';
+    });
+  } catch (e) { /* keep the static default */ }
 }
 
 // reveal pill after the hero scrolls out of view
@@ -269,7 +278,7 @@ if (pill) {
 
 // ── AFFILIATE LINK HANDLER (.vlink) ─────────────────────────
 // Booking URLs are base64-encoded in data-vurl rather than written as plain
-// hrefs (same pattern as emeraldcavevegas.com). The whole card is clickable;
+// hrefs. The whole card is clickable;
 // this decodes and opens the GetYourGuide page in a new tab.
 function openVlink(target) {
   if (!target || !target.dataset || !target.dataset.vurl) return;

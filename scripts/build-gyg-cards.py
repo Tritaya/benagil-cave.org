@@ -38,6 +38,7 @@ BEN = re.compile(r"benagil", re.I)
 KAYAK = re.compile(r"kayak|paddle|\bsup\b|stand[- ]up|canoe", re.I)
 CAT = re.compile(r"catamaran|sailing|\bsail\b|yacht", re.I)
 DOLPH = re.compile(r"dolphin", re.I)
+MARINHA = re.compile(r"marinha|algar seco|carvoeiro caves|caves of carvoeiro", re.I)
 TOWNS = {
     "benagil": re.compile(r"benagil beach|praia de benagil|from benagil|benagil:", re.I),
     "carvoeiro": re.compile(r"carvoeiro", re.I),
@@ -75,9 +76,24 @@ HERO_OVERRIDES = {
     "index": 421964,
     "operators": 421964,
     "benagil-cave-worth-it": 421964,
-    # the kayak page is written around the max-6 5.0/547 paddle; t732531 (a kayak tour whose title
-    # omits the word) out-baskets it by $5 and must not take the calendar
-    "benagil-cave-kayak": 670049,
+    # kayak page: the guided kayak with the most bookings value on the shelf (price x weekly reviews,
+    # 2026-11-10 roster read: t281617 EUR 29 x 26/wk against t670049 EUR 40 x 3/wk)
+    "benagil-cave-kayak": 281617,
+    # Albufeira: the town's own best seller, the 2.5-hour cave and dolphin boat (EUR 34 x 70/wk)
+    "benagil-cave-tour-from-albufeira": 64461,
+    # Portimao: the town's most-booked boat, the speedboat (EUR 25 x 83/wk); the value sort put a $335
+    # per-person listing with 155 reviews on the calendar after the 11 Nov re-scrape
+    "benagil-cave-tour-from-portimao": 397931,
+    # Lagos: the dolphin + Benagil combo, the town's best seller by bookings value (EUR 60 x 37/wk); the
+    # dolphin queries in Search Console land on this page
+    "benagil-cave-tour-from-lagos": 446452,
+    # dolphin page: the same best seller of the Benagil + dolphin shelf
+    "benagil-caves-and-dolphins": 64461,
+    # Marinha / Carvoeiro caves page: the Portimao RIB that runs Carvoeiro, Algar Seco and Benagil
+    # (EUR 25 x 44/wk, level with t402450 from Lagos)
+    "praia-da-marinha-carvoeiro-caves": 396968,
+    # rules page: the small boat from Carvoeiro, the closest launch (same calendar as the home page)
+    "benagil-cave-rules": 421964,
     # Faro: the page's verdict is "most Faro day trips never go on the water; this one does" - the
     # calendar is the boat (t874501, boards at Armacao de Pera), never the 3,302-review clifftop day
     # t304398 ("This is not a boat tour"), which is a choice card instead (2026-10-04)
@@ -119,7 +135,11 @@ def load():
         d = json.load(io.open(fp, encoding="utf-8"))
         d = d if isinstance(d, list) else d.get("products") or d.get("offers")
         for t in d:
-            by[int(t["id"])] = t
+            i = int(t["id"])
+            # the newest read of a tour wins, whatever file it sits in (the Faro extract of 3 Oct must not
+            # override the 11 Nov shelf for the tours both hold)
+            if i not in by or (t.get("scrapedAt") or "") >= (by[i].get("scrapedAt") or ""):
+                by[i] = t
     off = offline_ids() & set(by)
     if off:
         print("offline in the GYG catalogue, dropped:", sorted(off))
@@ -485,9 +505,11 @@ def widget_auto():
     return '<div data-gyg-widget="auto" data-gyg-partner-id="%s" data-gyg-cmp="%s-a" data-gyg-locale-code="en-US" data-gyg-currency="USD"></div>' % (PARTNER, CMP)
 
 
-DISCLAIMER = ('<p class="t-note ec-note">Prices are GetYourGuide "from" prices in US dollars, per person unless the card says "priced per boat", ratings and review counts as captured 12 September 2026; '
-              'they move with season and availability &#8212; the live widget and the booking page are the reference. Sea permitting: swell over about 1.5 m closes the cave. '
-              'Booking through these links may earn us a commission at no extra cost to you; it never changes the order or the verdicts.</p>')
+STAMP = "11 November 2026"
+DISCLAIMER = ('<p class="t-note ec-note">Prices are GetYourGuide "from" prices in US dollars, per person unless the card says "priced per boat", ratings and review counts as listed on %s; '
+              'they move with season and availability &#8212; the live widget and the booking page are the reference. Every trip runs sea permitting: the skipper or guide decides on the day, '
+              'and each listing sets out what happens if the sea cancels it. '
+              'Booking through these links may earn us a commission at no extra cost to you; it never changes the order or the verdicts.</p>' % STAMP)
 
 
 def inject(path, marker, block, inline=False):
@@ -569,6 +591,17 @@ def main():
         "benagil-cave-tour-from-portimao": town_slot("portimao", catd_ids),
         "benagil-cave-tour-from-albufeira": town_slot("albufeira", catd_ids),
         "benagil-cave-tour-from-lagos": town_slot("lagos", catd_ids),
+        # Benagil + dolphin combos (title names dolphins), any town: the dolphin page's list
+        "dolphin": ranked(pool, lambda t: craft(t) != "kayak" and DOLPH.search(f(t, "title")) is not None, CARD_MIN_REVIEWS),
+        # ... split by the departure town the page names (Albufeira, Lagos, Portimao; the rest together)
+        "dolphin-albufeira": ranked(pool, lambda t: craft(t) != "kayak" and DOLPH.search(f(t, "title")) is not None and "albufeira" in towns(t), CARD_MIN_REVIEWS),
+        "dolphin-lagos": ranked(pool, lambda t: craft(t) != "kayak" and DOLPH.search(f(t, "title")) is not None and "lagos" in towns(t), CARD_MIN_REVIEWS),
+        "dolphin-portimao": ranked(pool, lambda t: craft(t) != "kayak" and DOLPH.search(f(t, "title")) is not None and "portimao" in towns(t), CARD_MIN_REVIEWS),
+        "dolphin-other": ranked(pool, lambda t: craft(t) != "kayak" and DOLPH.search(f(t, "title")) is not None and not ({"albufeira", "lagos", "portimao"} & set(towns(t))), CARD_MIN_REVIEWS),
+        # boats that name Praia da Marinha, Algar Seco or the Carvoeiro caves in the title or route
+        "marinha": ranked(pool, lambda t: craft(t) != "kayak" and MARINHA.search(f(t, "title") + " " + f(t, "itinerary")) is not None, CARD_MIN_REVIEWS),
+        # guided paddles that name Praia da Marinha (the classic kayak route from Benagil beach)
+        "marinha-kayak": ranked(pool, lambda t: craft(t) == "kayak" and re.search(r"marinha", f(t, "title") + " " + f(t, "includes") + " " + f(t, "description")[:600], re.I) is not None, CARD_MIN_REVIEWS),
     }
     for slug, pat in FAR_TOWNS.items():
         SLOTS[slug] = ranked(far_pool, lambda t, p=pat: p.search(f(t, "title")) is not None, CARD_MIN_REVIEWS)
@@ -605,15 +638,20 @@ def main():
     HEROES["benagil-cave-kayak"] = pick_hero("benagil-cave-kayak", SLOTS["kayak-only"])
     for slug in FAR_TOWNS:
         HEROES[slug] = pick_hero(slug, SLOTS[slug])
+    # 2026-11-11 pages: dolphins, Praia da Marinha / Carvoeiro caves, the rules page
+    HEROES["benagil-caves-and-dolphins"] = pick_hero("benagil-caves-and-dolphins", SLOTS["dolphin"])
+    HEROES["praia-da-marinha-carvoeiro-caves"] = pick_hero("praia-da-marinha-carvoeiro-caves", SLOTS["marinha"])
+    HEROES["benagil-cave-rules"] = pick_hero("benagil-cave-rules", SLOTS["boat-near"])
 
-    out = {"partner": PARTNER, "cmp": CMP, "stamp": "12 September 2026", "heroes": HEROES, "slots": {}, "og": {}, "hero_meta": {},
+    out = {"partner": PARTNER, "cmp": CMP, "stamp": STAMP, "heroes": HEROES, "slots": {}, "og": {}, "hero_meta": {},
            "disclaimer": DISCLAIMER, "widget_auto": widget_auto(), "mostbooked": {}, "private_row": {}}
     for slug, tid in HEROES.items():
         t = pool_all[tid]
         site_file = SITE_HERO.get(slug, slug + ".webp")
         out["og"][slug] = ("https://benagil-cave.org/img/" + site_file) if os.path.exists(os.path.join(HERE, "..", "img", site_file)) else og_image(t)
         out["hero_meta"][slug] = {"id": tid, "title": clean_title(t), "price": price(t), "rating": rating(t), "reviews": reviews(t),
-                                  "aff": aff_url(t), "widget": widget_availability(tid), "lead": hero_lead(pool_all, tid)}
+                                  "aff": aff_url(t), "widget": widget_availability(tid), "lead": hero_lead(pool_all, tid),
+                                  "price_num": price_num(t), "base_num": float(t.get("basePrice") or 0), "provider": t.get("provider") or ""}
     TOWN_OF_SLUG = {"benagil-cave-tour-from-carvoeiro": "carvoeiro", "benagil-cave-tour-from-armacao-de-pera": "armacao",
                     "benagil-cave-tour-from-portimao": "portimao", "benagil-cave-tour-from-albufeira": "albufeira",
                     "benagil-cave-tour-from-lagos": "lagos"}
@@ -663,6 +701,16 @@ def main():
     priv = [i for i in SLOTS["private"] if i not in boat_used]
     h, used = cards_html(pool_all, priv, limit=3) if priv else ("", [])
     out["private_row"]["benagil-boat-tour"] = {"html": h, "ids": used}
+    # named products the page generators quote in prose or put on choice cards (title, provider, the listing's
+    # "from" and its regular price, rating, reviews, the -btc affiliate link)
+    EXPORT_IDS = (64461, 100467, 446452, 420129, 109039, 396968, 402450, 421964, 281617, 670049, 450380, 414078, 444875, 397931, 526941)
+    out["tours"] = {}
+    for i in EXPORT_IDS:
+        if i in pool_all:
+            t = pool_all[i]
+            out["tours"][str(i)] = {"title": clean_title(t), "provider": t.get("provider") or "", "price": price(t),
+                                    "price_num": price_num(t), "base_num": float(t.get("basePrice") or 0), "rating": rating(t),
+                                    "reviews": reviews(t), "aff_btc": aff_url(t, "btc"), "aff_b64": b64(aff_url(t, "btc"))}
     json.dump(out, io.open(os.path.join(HERE, "gyg-cards.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
 
     def og_meta(slug):

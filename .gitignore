@@ -8,3 +8,5 @@ _*.txt
 
 # raw ChatGPT generations (delivered webp lives in img/)
 img/raw/
+_public/
+__pycache__/

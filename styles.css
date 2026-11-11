@@ -1,7 +1,6 @@
 /* ============================================================
    Benagil Cave — Atlantic Limestone Theme
    Light editorial data-journalism · Spectral + IBM Plex Sans
-   Architecture cloned from emeraldcavevegas.com; recoloured.
    Two-colour identity: Benagil cave-water TEAL (structure) +
    oculus GOLD (the skylight — eyebrows, logo, light accents).
    ============================================================ */
@@ -66,9 +65,7 @@ section:first-of-type { border-top: none; }
   border-bottom: 2.5px solid var(--text);
 }
 
-/* Debt-proof nav: wraps to a second row instead of overflowing the viewport
-   as pages are added (the lesson from emeraldcavevegas.com). Keep the inline
-   set curated; deep pages live in the drawer + footer. */
+/* Nav wraps to a second row instead of overflowing the viewport. */
 .nav-inner {
   max-width: var(--wide); margin: 0 auto; padding: .45rem 1.5rem;
   display: flex; align-items: center; gap: 2.5rem; min-height: 52px;
@@ -571,10 +568,8 @@ blockquote.editorial cite {
 }
 
 /* ============================================================
-   BOOKING LAYER (September 2026) — GetYourGuide inventory.
-   Verdict strip v4 (canonical grammar from _VERDICT-BAND.md),
-   product cards (cloaked .vlink, mirrors emeraldcavevegas.com),
-   pinned availability calendar, auto-widget end slot.
+   Booking layer: sea strip, product cards,
+   availability calendar, more-trips widget.
    ============================================================ */
 
 /* ── VERDICT STRIP v4 — chip + CTA bound left, evidence tiles right ── */
@@ -670,3 +665,9 @@ blockquote.editorial cite {
 
 /* floating pill doubles as the booking nudge once the verdict is in */
 .conditions-pill .pill-cta { opacity: .85; font-weight: 600; margin-left: .1rem; }
+
+/* sea strip: live tiles only when scripts run (the noscript line covers the rest) */
+html:not(.js) .strip-cell--live { display: none; }
+/* the sea widget: long readings wrap inside a phone column */
+.weather-body > * { min-width: 0; }
+.weather-main .weather-verdict, .weather-main .weather-desc, .weather-main .weather-temp { white-space: normal; overflow-wrap: anywhere; max-width: 100%; }

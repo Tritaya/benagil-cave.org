@@ -159,5 +159,33 @@
   "kind": "hero",
   "w": 1200,
   "h": 630
+ },
+ "benagil-dolphin-departures-map": {
+  "alt": "Map of the Algarve coast from Lagos to Albufeira showing Benagil Cave and the marinas at Lagos, Portimão and Albufeira, with Armação de Pêra",
+  "caption": "Where the cave-and-dolphin boats leave from. Albufeira and Lagos are the long runs; Portimão sits in between.",
+  "kind": "map",
+  "w": 1400,
+  "h": 759
+ },
+ "benagil-marinha-carvoeiro-caves-map": {
+  "alt": "Map of the coast from Praia do Carvoeiro and Algar Seco past Vale Centeanes, Praia do Carvalho and Benagil Cave to Praia da Marinha and Albandeira",
+  "caption": "Carvoeiro to Albandeira: Algar Seco and the Carvoeiro caves in the west, Benagil in the middle, Praia da Marinha about a kilometre to its east.",
+  "kind": "map",
+  "w": 1400,
+  "h": 900
+ },
+ "benagil-cave-rules-area-map": {
+  "alt": "Map of the Lagoa coast covered by the Benagil navigation rules, from Praia do Vale da Lapa west of Carvoeiro to Praia da Albandeira, with Benagil Cave marked",
+  "caption": "The rules cover the water within 500 metres of the coast from Praia do Vale da Lapa to Praia da Albandeira. Boats get two minutes inside the cave, paddlers eight.",
+  "kind": "map",
+  "w": 1400,
+  "h": 800
+ },
+ "benagil-kayak-launch-beaches-map": {
+  "alt": "Map of the launch beaches for Benagil kayak tours: Praia do Carvalho, Praia de Benagil, Praia da Marinha and Praia da Albandeira, with Benagil Cave next to Praia de Benagil",
+  "caption": "The paddle is short: Benagil Cave sits beside Praia de Benagil, where most guided paddles launch. Praia do Carvalho and Albandeira are the other starts.",
+  "kind": "map",
+  "w": 1400,
+  "h": 800
  }
 }

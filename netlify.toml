@@ -1,3 +1,102 @@
 [build]
-  command   = ""
-  publish   = "."
+  # Publish ONLY public files: make_public.sh copies the pages, CSS/JS, images, sitemap, robots and the
+  # IndexNow key into _public/. Scripts, offers data and image plans are never served.
+  # Edge functions keep running from netlify/edge-functions/.
+  command = "sh make_public.sh"
+  publish = "_public"
+
+[[redirects]]
+  from = "/benagil-boat-tour.html"
+  to = "/benagil-boat-tour"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/benagil-cave-kayak.html"
+  to = "/benagil-cave-kayak"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/benagil-cave-rules.html"
+  to = "/benagil-cave-rules"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/benagil-cave-tour-from-albufeira.html"
+  to = "/benagil-cave-tour-from-albufeira"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/benagil-cave-tour-from-armacao-de-pera.html"
+  to = "/benagil-cave-tour-from-armacao-de-pera"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/benagil-cave-tour-from-carvoeiro.html"
+  to = "/benagil-cave-tour-from-carvoeiro"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/benagil-cave-tour-from-faro.html"
+  to = "/benagil-cave-tour-from-faro"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/benagil-cave-tour-from-lagos.html"
+  to = "/benagil-cave-tour-from-lagos"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/benagil-cave-tour-from-lisbon.html"
+  to = "/benagil-cave-tour-from-lisbon"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/benagil-cave-tour-from-portimao.html"
+  to = "/benagil-cave-tour-from-portimao"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/benagil-cave-worth-it.html"
+  to = "/benagil-cave-worth-it"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/benagil-caves-and-dolphins.html"
+  to = "/benagil-caves-and-dolphins"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/index.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/operators.html"
+  to = "/operators"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/praia-da-marinha-carvoeiro-caves.html"
+  to = "/praia-da-marinha-carvoeiro-caves"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/slide-and-splash.html"
+  to = "/slide-and-splash"
+  status = 301
+  force = true
